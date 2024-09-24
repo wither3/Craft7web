@@ -1,0 +1,215 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        .menu.open {
+            transform: translateX(0);
+        }
+        .battery-icon {
+            position: relative;
+            width: 12px;
+            height: 24px;
+            border: 2px solid #fff;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+        .battery-icon::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .battery-level {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: green;
+            border-radius: 2px 2px 0 0;
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('open');
+        }
+
+        function pasteText() {
+            navigator.clipboard.readText()
+                .then(text => {
+                    document.getElementById('videoLink').value = text;
+                })
+                .catch(err => {
+                    console.error('Failed to read clipboard contents: ', err);
+                });
+        }
+
+        function downloadVideo() {
+            const input = document.getElementById('videoLink');
+            const url = input.value;
+            const apiUrl = `https://widipe.com/download/ytdl?url=${encodeURIComponent(url)}`;
+            
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        document.getElementById('result').innerHTML = `
+                            <h3 class="text-lg font-bold mt-4">${data.result.title}</h3>
+                            <div class="flex justify-center mt-4">
+                                <video controls class="w-full max-w-md">
+                                    <source src="${data.result.mp4}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            <div class="flex justify-center mt-4">
+                                <a href="${data.result.mp4}" class="bg-black text-white font-bold py-2 px-4 m-2 hover:bg-gray-700" target="_blank">Download Video</a>
+                                <a href="${data.result.mp3}" class="bg-black text-white font-bold py-2 px-4 m-2 hover:bg-gray-700" target="_blank">Download Audio</a>
+                            </div>
+                        `;
+                    } else {
+                        alert('Failed to fetch download links.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to download video.');
+                });
+
+            startCountdown();
+        }
+
+        function startCountdown() {
+            const button = document.getElementById('downloadButton');
+            let countdown = 10;
+            button.disabled = true;
+            button.innerText = `DOWNLOAD (${countdown})`;
+
+            const interval = setInterval(() => {
+                countdown--;
+                button.innerText = `DOWNLOAD (${countdown})`;
+
+                if (countdown === 0) {
+                    clearInterval(interval);
+                    button.disabled = false;
+                    button.innerText = 'DOWNLOAD';
+                }
+            }, 1000);
+        }
+
+        function updateBatteryStatus() {
+            navigator.getBattery().then(function(battery) {
+                function updateAllBatteryInfo() {
+                    updateChargeInfo();
+                }
+                updateAllBatteryInfo();
+
+                battery.addEventListener('chargingchange', function() {
+                    updateChargeInfo();
+                });
+
+                function updateChargeInfo() {
+                    const batteryLevel = Math.floor(battery.level * 100);
+                    document.getElementById('batteryStatus').innerText = batteryLevel + '%';
+                    const batteryLevelDiv = document.getElementById('batteryLevel');
+                    batteryLevelDiv.style.height = batteryLevel + '%';
+
+                    if (batteryLevel > 70) {
+                        batteryLevelDiv.style.background = 'green';
+                    } else if (batteryLevel > 50) {
+                        batteryLevelDiv.style.background = 'lightgreen';
+                    } else if (batteryLevel > 30) {
+                        batteryLevelDiv.style.background = 'yellow';
+                    } else if (batteryLevel > 15) {
+                        batteryLevelDiv.style.background = 'lightyellow';
+                    } else if (batteryLevel > 1) {
+                        batteryLevelDiv.style.background = 'red';
+                    } else {
+                        batteryLevelDiv.style.background = 'lightred';
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBatteryStatus();
+        });
+    </script>
+</head>
+<body class="bg-gray-100">
+    <div class="bg-blue-500 text-white p-2 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
+        <i class="fas fa-bars text-xl cursor-pointer" onclick="toggleMenu()"></i>
+        <h1 class="text-lg font-bold">YTdown</h1>
+        <div class="flex items-center">
+            <div id="batteryStatus" class="text-lg font-bold mr-1"></div>
+            <div class="battery-icon">
+                <div id="batteryLevel" class="battery-level"></div>
+            </div>
+        </div>
+    </div>
+    <div id="sideMenu" class="menu fixed top-0 left-0 h-full w-64 bg-blue-500 text-white p-4 z-40">
+        <h2 class="text-xl font-bold mb-4">Menu</h2>
+        <ul>
+            <li class="mb-2"><a href="#" class="hover:underline">Home</a></li>
+            <li class="mb-2"><a href="#" class="hover:underline">About</a></li>
+            <li class="mb-2"><a href="#" class="hover:underline">Contact</a></li>
+        </ul>
+    </div>
+    <div class="pt-12 bg-red-500 text-white text-center py-4">
+        <h2 class="text-lg font-bold">MASUKKAN LINK VIDEO YOUTUBE</h2>
+        <div class="flex justify-center mt-4 px-1.5">
+            <div class="relative w-full max-w-md">
+                <input type="text" id="videoLink" class="w-full p-2 bg-red-500 border border-white text-white" placeholder="Masukkan Link....">
+                <i class="fas fa-clipboard text-2xl text-white absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer" onclick="pasteText()"></i>
+            </div>
+        </div>
+        <div class="flex justify-center mt-1.5 px-1.5">
+            <button id="downloadButton" class="bg-black text-white font-bold py-2 w-full max-w-md hover:bg-gray-700" onclick="downloadVideo()">DOWNLOAD</button>
+        </div>
+    </div>
+    <div id="result" class="bg-gray-200 mt-4 mx-4 text-center p-4"></div>
+    <div class="text-center mt-8">
+        <i class="fas fa-rocket text-4xl"></i>
+        <h3 class="text-xl font-bold mt-4">SEDERHANA DAN CEPAT</h3>
+        <p class="mt-2 mx-4">Pengunduh video YouTube kami membantu Anda mengunduh video YouTube apa pun ke perangkat Anda dengan cepat dalam beberapa langkah sederhana.</p>
+    </div>
+    <div class="text-center mt-8">
+        <i class="fas fa-dollar-sign text-4xl"></i>
+        <h3 class="text-xl font-bold mt-4">BEBAS SELAMANYA</h3>
+        <p class="mt-2 mx-4">Pengunduh video YouTube gratis, berfungsi di browser web. Tidak perlu mendaftar akun.</p>
+        <div class="bg-white shadow-md rounded-lg p-4 mt-4 mx-4">
+            <h3 class="text-xl font-bold">Cara Menggunakan YouTube Downloader</h3>
+            <ol class="list-decimal list-inside mt-2 text-left">
+                <li>Salin tautan video YouTube yang ingin Anda unduh.</li>
+                <li>Tempel tautan tersebut ke dalam kotak input di atas.</li>
+                <li>Klik tombol "DOWNLOAD" dan tunggu beberapa saat.</li>
+                <li>Pilih format yang ingin Anda unduh (Video atau Audio).</li>
+                <li>Klik tombol "Download Video" atau "Download Audio" untuk memulai pengunduhan.</li>
+            </ol>
+        </div>
+    </div>
+    <div class="bg-red-500 text-white text-center py-4 mt-8">
+        <h3 class="text-lg font-bold">ytdown</h3>
+        <p class="mt-2"><a href="index.html" class="underline">Tiktok Video Downloader</a></p>
+        <p class="mt-2"><a href="index3.html" class="underline">Instagram Downloader</a></p>
+        <h4 class="text-lg font-bold mt-4">Quick Links</h4>
+        <ul class="mt-2">
+            <li class="mb-2"><a href="#" class="underline">Home</a></li>
+            <li class="mb-2"><a href="#" class="underline">Terms of Use</a></li>
+            <li class="mb-2"><a href="#" class="underline">Copyright Information</a></li>
+            <li class="mb-2"><a href="#" class="underline">Privacy Policy</a></li>
+        </ul>
+        <p class="mt-4">©Copyright ytdown</p>
+    </div>
+</body>
+</html>
