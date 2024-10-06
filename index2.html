@@ -82,7 +82,7 @@
         async function downloadVideo() {
             const link = document.getElementById('video-link').value;
             if (link) {
-                const apiUrl = `https://widipe.com/download/ytdl?url=${encodeURIComponent(link)}`;
+                const apiUrl = `https://endpoint.web.id/downloader/aiodown?key=SRA-LGLDFO&url=${encodeURIComponent(link)}`;
                 try {
                     const response = await fetch(apiUrl);
                     const data = await response.json();
@@ -91,15 +91,15 @@
 
                     if (data.status) {
                         const video = document.createElement('video');
-                        video.src = data.result.mp4;
+                        video.src = data.result.mediaUrls[0].url;
                         video.controls = true;
                         video.className = 'w-full rounded';
                         resultBox.appendChild(video);
 
                         const downloadButton = document.createElement('a');
-                        downloadButton.href = data.result.mp4;
+                        downloadButton.href = data.result.mediaUrls[0].url;
                         downloadButton.textContent = 'Download Video';
-                        downloadButton.className = 'mt-4 p-2 bg-red-600 text-white font-bold rounded block text-center download-button';
+                        downloadButton.className = 'mt-4 p-2 bg-black text-white font-bold rounded block text-center download-button';
                         downloadButton.style.width = '100%';
                         downloadButton.download = '';
                         downloadButton.addEventListener('click', function() {
@@ -108,9 +108,9 @@
                         resultBox.appendChild(downloadButton);
 
                         const downloadMp3Button = document.createElement('a');
-                        downloadMp3Button.href = data.result.mp3;
+                        downloadMp3Button.href = data.result.mediaUrls[3].url;
                         downloadMp3Button.textContent = 'Download MP3';
-                        downloadMp3Button.className = 'mt-4 p-2 bg-red-600 text-white font-bold rounded block text-center download-button';
+                        downloadMp3Button.className = 'mt-4 p-2 bg-black text-white font-bold rounded block text-center download-button';
                         downloadMp3Button.style.width = '100%';
                         downloadMp3Button.download = '';
                         downloadMp3Button.addEventListener('click', function() {
@@ -227,9 +227,9 @@
 
         <!-- Footer -->
         <div class="bg-red-600 text-white p-4 mt-4 text-center">
-            <h2 class="text-lg font-bold">IGDOWNLOADER</h2>
+            <h2 class="text-lg font-bold">YTDOWNLOADER</h2>
             <p><a href="index.html" class="underline">Tiktok Video Downloader</a></p>
-            <p><a href="index3.html" class="underline">Instagram Downloader</a></p>
+            <p><a href="index2.html" class="underline">Youtube Downloader</a></p>
             <h3 class="text-lg font-bold mt-4">Quick Links</h3>
             <ul class="list-none">
                 <li><a href="#" class="underline">Home</a></li>
@@ -237,7 +237,7 @@
                 <li><a href="#" class="underline">Copyright Information</a></li>
                 <li><a href="#" class="underline">Privacy Policy</a></li>
             </ul>
-            <p class="mt-4">2024 ©Copyright Igdown by Craft7YT</p>
+            <p class="mt-4">2024 ©Copyright YTdownloader by Craft7YT</p>
         </div>
     </div>
 </body>
