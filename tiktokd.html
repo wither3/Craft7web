@@ -106,15 +106,15 @@
                 }
             }, 1000);
 
-            const apiUrl = `https://api.tiklydown.eu.org/api/download/v2?url=${encodeURIComponent(urlInput)}`;
+            const apiUrl = `https://api.tiklydown.eu.org/api/download/v5?url=${encodeURIComponent(urlInput)}`;
             
             try {
                 const response = await fetch(apiUrl);
                 const data = await response.json();
                 
                 if (data.status === 200) {
-                    const videoUrl = data.result.video1;
-                    const videoHdUrl = data.result.video_hd;
+                    const videoUrl = data.result.play;
+                    const videoHdUrl = data.result.hdplay;
                     const musicUrl = data.result.music;
                     const videoPlaceholder = document.getElementById('video-placeholder');
                     videoPlaceholder.innerHTML = `
@@ -122,15 +122,15 @@
                             <img src="${data.result.author.avatar}" alt="Author Avatar" class="w-12 h-12 rounded-full mb-2">
                             <div class="text-center">
                                 <p class="font-bold">${data.result.author.nickname}</p>
-                                <p class="text-sm break-words">${data.result.desc}</p>
+                                <p class="text-sm break-words">${data.result.title}<br>▶️:${data.result.play_count} ❤️:${data.result.digg_count} 💬:${data.result.comment_count}</p>
                             </div>
                         </div>
                         <video controls class="w-full mt-4">
                             <source src="${videoUrl}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
-                        <a href="${videoUrl}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block w-full text-center" download>Download Video</a>
-                        <a href="${videoHdUrl}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block w-full text-center" download>Download Video HD</a>
+                        <a href="${videoUrl}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block w-full text-center" download>Download Video ${data.result.size.format}</a>
+                        <a href="${videoHdUrl}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block w-full text-center" download>Download Video HD ${data.result.hd_size.format}</a>
                         <a href="${musicUrl}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block w-full text-center" download>Download Music</a>
                     `;
                     videoPlaceholder.classList.remove('h-64');
@@ -198,7 +198,7 @@
             <i class="fas fa-times text-xl cursor-pointer" onclick="toggleMenu()"></i>
         </div>
         <ul class="p-4">
-            <li class="py-2"><a href="#" class="menu-item">Home</a></li>
+            <li class="py-2"><a href="index.html" class="menu-item">Home</a></li>
             <li class="py-2"><a href="#" class="menu-item">About</a></li>
             <li class="py-2"><a href="#" class="menu-item">Contact</a></li>
         </ul>
