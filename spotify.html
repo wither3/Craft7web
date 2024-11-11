@@ -1,0 +1,195 @@
+<html>
+<head>
+    <title>SpotDown</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out;
+        }
+        .spotify-player {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #202938;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .spotify-player button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+        }
+        .spotify-player input[type="range"] {
+            width: 100%;
+            margin: 0 10px;
+        }
+    </style>
+    <script>
+        let audio;
+
+        async function downloadMusic() {
+            const url = document.getElementById('spotifyLink').value;
+            const apiUrl = `https://api.ryzendesu.vip/api/downloader/spotify?url=${encodeURIComponent(url)}`;
+            
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const downloadLink = data.link;
+                    const metadata = data.metadata;
+                    
+                    document.getElementById('result').innerHTML = `
+                        <div class="mt-4 p-4 bg-gray-800 text-white rounded-lg text-center fade-in-up">
+                            <h3 class="text-xl font-bold">${metadata.title} - ${metadata.artists}</h3>
+                            <p>Album: ${metadata.album}</p>
+                            <p>Release Date: ${metadata.releaseDate}</p>
+                            <img src="${metadata.cover}" alt="Album cover" class="mt-2 rounded-lg mx-auto w-full" />
+                            <div class="spotify-player">
+                                <button onclick="togglePlayPause()"><i id="playPauseIcon" class="fas fa-play"></i></button>
+                                <input type="range" id="seekBar" value="0" max="100" onchange="seekMusic(this.value)">
+                                <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                            </div>
+                            <a href="${downloadLink}" class="mt-2 bg-green-500 px-4 py-2 rounded-full inline-block" download>Download MP3</a>
+                        </div>
+                    `;
+
+                    audio = new Audio(downloadLink);
+                    audio.addEventListener('timeupdate', updateSeekBar);
+                    audio.addEventListener('loadedmetadata', () => {
+                        document.getElementById('duration').innerText = formatTime(audio.duration);
+                    });
+                } else {
+                    document.getElementById('result').innerHTML = '<p class="text-red-500 text-center">Failed to fetch the download link.</p>';
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p class="text-red-500 text-center">An error occurred while fetching the download link.</p>';
+            }
+        }
+
+        function togglePlayPause() {
+            const playPauseIcon = document.getElementById('playPauseIcon');
+            if (audio.paused) {
+                audio.play();
+                playPauseIcon.classList.remove('fa-play');
+                playPauseIcon.classList.add('fa-pause');
+            } else {
+                audio.pause();
+                playPauseIcon.classList.remove('fa-pause');
+                playPauseIcon.classList.add('fa-play');
+            }
+        }
+
+        function updateSeekBar() {
+            const seekBar = document.getElementById('seekBar');
+            const currentTime = document.getElementById('currentTime');
+            seekBar.value = (audio.currentTime / audio.duration) * 100;
+            currentTime.innerText = formatTime(audio.currentTime);
+        }
+
+        function seekMusic(value) {
+            audio.currentTime = (value / 100) * audio.duration;
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function startCountdown(button) {
+            let countdown = 10;
+            button.disabled = true;
+            button.innerText = `Wait ${countdown} seconds`;
+
+            const interval = setInterval(() => {
+                countdown--;
+                button.innerText = `Wait ${countdown} seconds`;
+
+                if (countdown === 0) {
+                    clearInterval(interval);
+                    button.disabled = false;
+                    button.innerText = 'Download';
+                }
+            }, 1000);
+        }
+
+        function handleDownloadClick() {
+            downloadMusic();
+            startCountdown(document.getElementById('downloadButton'));
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</head>
+<body class="bg-black text-white">
+    <header class="flex justify-between items-center p-5 border-b-2 border-white fixed top-0 left-0 right-0 bg-black z-50">
+        <div class="flex items-center">
+            <i class="fas fa-music text-green-500 text-2xl"></i>
+            <span class="ml-2 text-green-500 text-xl font-bold">SpotDown</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <a href="https://chat.whatsapp.com/IEzFm5hQz2fIwpI6NNDTvN" class="bg-white text-green-500 px-3 py-1 rounded-full flex items-center">
+                <i class="fas fa-mobile-alt mr-2"></i>
+                join group wa
+            </a>
+            <button class="bg-green-500 px-4 py-2 rounded-full" onclick="toggleMenu()">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+        </div>
+    </header>
+    <div id="mobile-menu" class="hidden fixed top-16 right-0 bg-gray-800 text-white w-48 p-4 rounded-lg shadow-lg z-50">
+        <ul>
+            <li class="py-2"><a href="index.html" class="hover:text-green-500">Home</a></li>
+            <li class="py-2"><a href="#" class="hover:text-green-500">About</a></li>
+            <li class="py-2"><a href="#" class="hover:text-green-500">Contact</a></li>
+        </ul>
+    </div>
+    <div class="mt-20 p-4 text-white">
+        <input type="text" id="spotifyLink" placeholder="Paste Spotify link here" class="w-full p-2 mt-2 rounded bg-gray-700 text-white" />
+        <button id="downloadButton" class="mt-2 bg-green-500 w-full p-2 rounded-full" onclick="handleDownloadClick()">Download</button>
+        <div id="result"></div>
+    </div>
+    <section class="p-10 bg-gray-900 text-white">
+        <h2 class="text-3xl font-bold text-center mb-8">Cara Menggunakan SpotDown</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center fade-in-up">
+                <i class="fas fa-link text-green-500 text-5xl mb-4"></i>
+                <h3 class="text-xl font-bold mb-2">1. Salin Link Spotify</h3>
+                <p>Salin link lagu dari Spotify yang ingin Anda download.</p>
+            </div>
+            <div class="text-center fade-in-up">
+                <i class="fas fa-paste text-green-500 text-5xl mb-4"></i>
+                <h3 class="text-xl font-bold mb-2">2. Tempel Link</h3>
+                <p>Tempel link yang sudah disalin ke dalam kotak input di atas.</p>
+            </div>
+            <div class="text-center fade-in-up">
+                <i class="fas fa-download text-green-500 text-5xl mb-4"></i>
+                <h3 class="text-xl font-bold mb-2">3. Download Lagu</h3>
+                <p>Klik tombol download untuk mengunduh lagu dalam format MP3.</p>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-gray-900 text-white text-center p-4 border-t-2 border-white">
+        <p><a href="https://chat.whatsapp.com/IEzFm5hQz2fIwpI6NNDTvN" class="text-green-500">Privacy Policy</a> | <a href="https://chat.whatsapp.com/IEzFm5hQz2fIwpI6NNDTvN" class="text-green-500">Terms Of Service</a></p>
+        <p>© 2024 SpotDown. All rights reserved.</p>
+    </footer>
+</body>
+</html>
