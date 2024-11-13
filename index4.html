@@ -1,0 +1,251 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        .menu {
+            display: none;
+        }
+
+        .menu.active {
+            display: block;
+        }
+    </style>
+    <script>
+        let audio = null;
+        let progressInterval = null;
+        let countdownInterval = null;
+
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('paste-box').value = text;
+            } catch (err) {
+                console.error('Failed to read clipboard contents: ', err);
+            }
+        }
+
+        async function downloadLink() {
+            const link = document.getElementById('paste-box').value;
+            if (link.includes("https://music.apple.com")) {
+                const apiUrl = `https://appledownloader.vercel.app/api/appledown/download?url=${encodeURIComponent(link)}`;
+                try {
+                    const response = await fetch(apiUrl);
+                    const result = await response.json();
+                    displayResult(result);
+                    startCountdown(10);
+                } catch (err) {
+                    console.error('Failed to fetch API: ', err);
+                    document.getElementById('api-result').innerText = 'Failed to fetch API';
+                }
+            } else {
+                alert('Link salah. Please enter a valid Apple Music link.');
+            }
+        }
+
+        function startCountdown(seconds) {
+            const downloadButton = document.getElementById('download-button');
+            downloadButton.disabled = true;
+            let remainingTime = seconds;
+            downloadButton.innerText = `Wait ${remainingTime}s`;
+
+            countdownInterval = setInterval(() => {
+                remainingTime -= 1;
+                downloadButton.innerText = `Wait ${remainingTime}s`;
+
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    downloadButton.disabled = false;
+                    downloadButton.innerText = 'Download';
+                }
+            }, 1000);
+        }
+
+        function displayResult(result) {
+            const resultContainer = document.getElementById('api-result');
+            resultContainer.innerHTML = `
+                <div class="flex flex-col items-center fade-in-up">
+                    <div class="text-gray-700 font-bold text-lg mb-2">Name: ${result.name}</div>
+                    <div class="text-gray-700 font-bold text-lg mb-2">Album: ${result.albumname}</div>
+                    <div class="text-gray-700 font-bold text-lg mb-2">Artist: ${result.artist}</div>
+                    <img src="${result.thumb}" alt="Album cover" class="w-32 h-32 mb-4 rounded-lg shadow-md">
+                    <div class="text-gray-700 font-bold text-lg mb-2">Duration: ${result.duration}</div>
+                    <div class="flex items-center space-x-4 mb-4 w-full">
+                        <button id="play-button" class="bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition duration-300" onclick="playAudio('${result.downloadLink}')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button id="pause-button" class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-full hover:bg-yellow-600 transition duration-300 hidden" onclick="pauseAudio()">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <div class="flex-1 bg-gray-300 rounded-full h-2.5 relative">
+                            <div id="progress-bar-fill" class="bg-green-500 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <div id="time-display" class="text-gray-700 font-bold">00:00 / ${result.duration}</div>
+                    </div>
+                    <a href="${result.downloadLink}" target="_blank" class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-red-600 transition duration-300">Download Music</a>
+                </div>
+            `;
+        }
+
+        function playAudio(url) {
+            if (audio) {
+                audio.pause();
+            }
+            audio = new Audio(url);
+            audio.play();
+            document.getElementById('play-button').classList.add('hidden');
+            document.getElementById('pause-button').classList.remove('hidden');
+            startProgressBar();
+        }
+
+        function pauseAudio() {
+            if (audio) {
+                audio.pause();
+            }
+            document.getElementById('play-button').classList.remove('hidden');
+            document.getElementById('pause-button').classList.add('hidden');
+            stopProgressBar();
+        }
+
+        function startProgressBar() {
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const timeDisplay = document.getElementById('time-display');
+            progressInterval = setInterval(() => {
+                if (audio && !audio.paused) {
+                    const progress = (audio.currentTime / audio.duration) * 100;
+                    progressBarFill.style.width = `${progress}%`;
+                    timeDisplay.innerText = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+                }
+            }, 100);
+        }
+
+        function stopProgressBar() {
+            clearInterval(progressInterval);
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('side-menu');
+            menu.classList.toggle('active');
+            if (menu.classList.contains('active')) {
+                menu.classList.add('slide-in-left');
+            } else {
+                menu.classList.remove('slide-in-left');
+            }
+        }
+
+        function closeMenu() {
+            const menu = document.getElementById('side-menu');
+            menu.classList.remove('active');
+            menu.classList.remove('slide-in-left');
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <!-- Side Menu -->
+    <div id="side-menu" class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-20 menu">
+        <div class="p-4 flex justify-between items-center">
+            <h2 class="text-xl font-bold">Menu</h2>
+            <div class="text-2xl cursor-pointer" onclick="closeMenu()">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <ul class="space-y-2 p-4">
+            <li><a href="index.html" class="text-gray-700 hover:text-gray-900">Home</a></li>
+            <li><a href="#" class="text-gray-700 hover:text-gray-900">About</a></li>
+            <li><a href="#" class="text-gray-700 hover:text-gray-900">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b bg-white shadow-sm fixed top-0 left-0 right-0 z-10">
+        <div class="text-2xl cursor-pointer" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="text-red-500 text-xl font-bold">
+            AppleMusicDownloader
+        </div>
+        <div class="text-2xl invisible">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="pt-20 p-4">
+        <div class="flex items-center bg-gray-200 px-4 py-2 mb-4 rounded-lg shadow-md">
+            <input id="paste-box" type="text" class="flex-1 bg-gray-200 outline-none rounded-lg p-1" placeholder="Paste your link here">
+            <div class="text-red-500 text-2xl cursor-pointer ml-2" onclick="pasteFromClipboard()">
+                <i class="fas fa-clipboard"></i>
+            </div>
+        </div>
+        <button id="download-button" class="bg-red-500 h-12 w-full flex items-center justify-center text-white font-bold cursor-pointer rounded-lg shadow-md hover:bg-red-600 transition duration-300" onclick="downloadLink()">
+            Download
+        </button>
+        <div id="api-result" class="mt-4 p-4 bg-white rounded-lg shadow-lg text-gray-700 flex flex-col items-center"></div>
+    </div>
+
+    <!-- How to Use Section -->
+    <div class="p-4 mt-8 bg-white rounded-lg shadow-lg text-gray-700 fade-in-up">
+        <h2 class="text-2xl font-bold mb-4">How to Use</h2>
+        <ol class="list-decimal list-inside space-y-2">
+            <li>Copy the Apple Music link you want to download.</li>
+            <li>Paste the link into the input box above.</li>
+            <li>Click the "Download" button.</li>
+            <li>Wait for the information to load.</li>
+            <li>Click the "Play" button to listen to the music.</li>
+            <li>Use the progress bar to seek through the music.</li>
+            <li>Click the "Download Music" button to download the music.</li>
+        </ol>
+    </div>
+
+    <!-- Footer -->
+    <footer class="p-4 mt-8 bg-white rounded-lg shadow-lg text-gray-700 fade-in-up">
+        <div class="flex flex-col items-center space-y-2">
+            <div class="flex space-x-4">
+                <a href="spotify.html" class="text-gray-700 hover:text-gray-900">Spotify Downloader</a>
+                <a href="index3.html" class="text-gray-700 hover:text-gray-900">Instagram Downloader</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Privacy Policy</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Terms of Use</a>
+                <a href="#" class="text-gray-700 hover:text-gray-900">Legal Disclaimer</a>
+            </div>
+            <div class="text-gray-500 text-sm">
+                © 2024 apple-music-downloader.com All Rights Reserved
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
