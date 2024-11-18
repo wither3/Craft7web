@@ -1,271 +1,297 @@
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>qTikSave</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        .menu-transition {
-            transition: transform 0.3s ease-in-out;
+        body {
+            font-family: 'Roboto', sans-serif;
         }
-        .menu-open {
-            transform: translateX(0);
+        .paste-button {
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .menu-closed {
-            transform: translateX(-100%);
+        .paste-button:hover {
+            background-color: #e5e7eb;
         }
-        .menu-item {
-            transition: color 0.3s ease-in-out;
+        .submit-button {
+            background-color: #1976D2;
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
         }
-        .menu-item:hover {
-            color: yellow;
+        .submit-button:hover {
+            background-color: #1565C0;
+            transform: scale(1.05);
         }
-        .sticky-navbar {
-            position: sticky;
-            top: 0;
-            z-index: 50;
+        .submit-button:active {
+            background-color: #10b981;
         }
-        .no-controls video::-webkit-media-controls {
-            display: none !important;
-        }
-        .no-controls video::-webkit-media-controls-play-button,
-        .no-controls video::-webkit-media-controls-start-playback-button {
-            display: none !important;
-        }
-        .menu-overlay {
+        .navbar {
             position: fixed;
             top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 40;
-            display: none;
+            background-color: white;
+            z-index: 1000;
         }
-        .menu-overlay.show {
-            display: block;
+        .download-button {
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            flex: 1;
+            transition: background-color 0.3s;
         }
-        .battery-icon {
-            display: inline-block;
-            width: 12px;
-            height: 24px;
-            border: 2px solid white;
-            border-radius: 2px;
-            position: relative;
-            margin-left: 8px;
+        .download-button:hover {
+            background-color: #f3f4f6;
         }
-        .battery-icon::after {
-            content: '';
-            display: block;
-            width: 6px;
-            height: 2px;
-            background: white;
-            position: absolute;
-            top: -4px;
-            left: 2px;
-        }
-        .battery-level {
+        .footer {
+            background-color: #f3f4f6;
+            padding: 2rem;
+            margin-top: 2rem;
             width: 100%;
-            position: absolute;
-            bottom: 0;
+        }
+        .footer h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .footer a {
+            color: #1976D2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: #1565C0;
+        }
+        audio {
+            display: block;
+            width: 100%;
+            height: 30px;
+            border: 1px solid black;
+            border-radius: 5px;
+            background-color: #f3f3f3;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .rainbow-text {
+            animation: rainbow 3s infinite;
+        }
+        @keyframes rainbow {
+            0% { color: rgb(0, 0, 255); }
+            33% { color: rgb(128, 0, 128); }
+            66% { color: rgb(255, 255, 0); }
+            100% { color: rgb(0, 0, 255); }
         }
     </style>
-    <script>
-        let isDownloading = false;
-        let countdownInterval;
-
-        async function downloadVideo() {
-            const urlInput = document.getElementById('url-input').value;
-            if (!urlInput) {
-                alert("Masukkan link video TikTok terlebih dahulu.");
-                return;
-            }
-
-            if (isDownloading) {
-                alert("Harap tunggu 10 detik sebelum mencoba lagi.");
-                return;
-            }
-
-            isDownloading = true;
-            const downloadButton = document.getElementById('download-button');
-            downloadButton.disabled = true;
-            downloadButton.classList.add('bg-black');
-            downloadButton.classList.remove('bg-blue-600');
-            let countdown = 10;
-            downloadButton.textContent = `Tunggu ${countdown} detik...`;
-
-            countdownInterval = setInterval(() => {
-                countdown--;
-                downloadButton.textContent = `Tunggu ${countdown} detik...`;
-                if (countdown === 0) {
-                    clearInterval(countdownInterval);
-                    isDownloading = false;
-                    downloadButton.disabled = false;
-                    downloadButton.classList.remove('bg-black');
-                    downloadButton.classList.add('bg-blue-600');
-                    downloadButton.textContent = 'DOWNLOAD';
-                }
-            }, 1000);
-
-            const apiUrl = `https://api.tiklydown.eu.org/api/download/v5?url=${encodeURIComponent(urlInput)}`;
-            
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                
-                if (data.status === 200) {
-                    const videoUrl = data.result.play;
-                    const videoHdUrl = data.result.hdplay;
-                    const musicUrl = data.result.music;
-                    const videoPlaceholder = document.getElementById('video-placeholder');
-                    videoPlaceholder.innerHTML = `
-                        <div class="flex flex-col items-center mb-4">
-                            <img src="${data.result.author.avatar}" alt="Author Avatar" class="w-12 h-12 rounded-full mb-2">
-                            <div class="text-center">
-                                <p class="font-bold">${data.result.author.nickname}</p>
-                                <p class="text-sm break-words">${data.result.title}<br>▶️:${data.result.play_count} ❤️:${data.result.digg_count} 💬:${data.result.comment_count}</p>
-                            </div>
-                        </div>
-                        <video controls class="w-full mt-4">
-                            <source src="${videoUrl}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <a href="${videoUrl}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block w-full text-center" download>Download Video ${data.result.size.format}</a>
-                        <a href="${videoHdUrl}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block w-full text-center" download>Download Video HD ${data.result.hd_size.format}</a>
-                        <a href="${musicUrl}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block w-full text-center" download>Download Music</a>
-                    `;
-                    videoPlaceholder.classList.remove('h-64');
-                } else {
-                    alert('Gagal mengunduh video. Silakan coba lagi.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan. Silakan coba lagi.');
-            }
-        }
-
-        function toggleMenu() {
-            const menu = document.getElementById('side-menu');
-            const overlay = document.getElementById('menu-overlay');
-            if (menu.classList.contains('menu-closed')) {
-                menu.classList.remove('menu-closed');
-                menu.classList.add('menu-open');
-                overlay.classList.add('show');
-            } else {
-                menu.classList.remove('menu-open');
-                menu.classList.add('menu-closed');
-                overlay.classList.remove('show');
-            }
-        }
-
-        async function pasteLink() {
-            try {
-                const text = await navigator.clipboard.readText();
-                document.getElementById('url-input').value = text;
-            } catch (err) {
-                console.error('Failed to read clipboard contents: ', err);
-            }
-        }
-
-        async function updateBatteryStatus() {
-            const battery = await navigator.getBattery();
-            const batteryStatus = document.getElementById('battery-status');
-            const batteryLevel = document.getElementById('battery-level');
-            const level = Math.round(battery.level * 100);
-            batteryStatus.textContent = `${level}%`;
-            batteryLevel.style.height = `${level}%`;
-            if (level > 50) {
-                batteryLevel.style.background = 'green';
-            } else if (level > 20) {
-                batteryLevel.style.background = 'yellow';
-            } else {
-                batteryLevel.style.background = 'red';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateBatteryStatus();
-            setInterval(updateBatteryStatus, 60000); // Update battery status every minute
-        });
-    </script>
 </head>
-<body class="bg-white flex flex-col items-center">
-    <!-- Menu Overlay -->
-    <div id="menu-overlay" class="menu-overlay" onclick="toggleMenu()"></div>
-
-    <!-- Side Menu -->
-    <div id="side-menu" class="fixed top-0 left-0 w-64 h-full bg-blue-600 text-white menu-transition menu-closed z-50">
-        <div class="flex justify-end p-4">
-            <i class="fas fa-times text-xl cursor-pointer" onclick="toggleMenu()"></i>
+<body class="bg-white text-gray-800">
+    <div class="navbar border-b border-black p-2">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <h1 class="text-4xl font-bold ml-2 rainbow-text">qTik<span class="rainbow-text">Save</span></h1>
+            <i class="fas fa-bars text-xl ml-2 mr-2"></i>
         </div>
-        <ul class="p-4">
-            <li class="py-2"><a href="index.html" class="menu-item">Home</a></li>
-            <li class="py-2"><a href="#" class="menu-item">About</a></li>
-            <li class="py-2"><a href="#" class="menu-item">Contact</a></li>
-        </ul>
     </div>
-
-    <!-- Header -->
-    <div class="w-full bg-blue-600 flex items-center justify-between p-2 sticky-navbar">
-        <i class="fas fa-bars text-white text-xl cursor-pointer" onclick="toggleMenu()"></i>
-        <h1 class="text-white text-xl font-bold">TIKDOWN7</h1>
-        <div class="flex items-center">
-            <div id="battery-status" class="text-white text-xl"></div>
-            <div class="battery-icon">
-                <div id="battery-level" class="battery-level"></div>
+    <div class="flex flex-col items-center justify-center min-h-screen p-4 pt-20">
+        <p class="mt-4 text-center text-gray-600">qTikSave adalah situs web Pengunduh TikTok yang cepat dan bebas iklan, Masukkan Tautan Anda Di Bawah.</p>
+        <div class="mt-6 w-full max-w-md">
+            <div class="relative">
+                <input id="urlInput" type="text" placeholder="Input URL..." class="w-full p-3 border border-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="pasteClipboard()" class="paste-button absolute right-3 top-2.5">
+                    <i class="fas fa-clipboard text-gray-500"></i>
+                </button>
+            </div>
+            <button id="submitButton" class="mt-3 w-full submit-button" onclick="sendLink()">KIRIM</button>
+        </div>
+        <div id="apiResult" class="mt-4 w-full max-w-md p-4 border border-gray-200 rounded-md shadow-md"></div>
+        <div class="mt-16 text-center">
+            <h2 class="text-4xl font-bold">Why should you use <span class="rainbow-text">qTik<span class="rainbow-text">Save</span></span></h2>
+        </div>
+        <div class="mt-8 w-full max-w-md">
+            <div class="p-4 border border-gray-200 rounded-md shadow-md">
+                <center>
+                    <p class="text-2xl"></p>
+                    <p class="mt-2 text-xl font-bold">CEPAT</p>
+                </center>
+            </div>
+        </div>
+        <div class="mt-8 w-full max-w-md">
+            <div class="p-4 border border-gray-200 rounded-md shadow-md">
+                <center>
+                    <p class="text-2xl"></p>
+                    <p class="mt-2 text-xl font-bold">AMAN</p>
+                </center>
+            </div>
+        </div>
+        <div class="mt-8 w-full max-w-md">
+            <div class="p-4 border border-gray-200 rounded-md shadow-md">
+                <center>
+                    <p class="text-2xl"></p>
+                    <p class="mt-2 text-xl font-bold">TANPA IKLAN</p>
+                </center>
+            </div>
+        </div>
+        <div class="mt-16 w-full max-w-2xl">
+            <h2 class="text-3xl font-bold text-center mb-4">Cara Menggunakan qTikSave</h2>
+            <div class="bg-gray-100 p-6 rounded-md shadow-md">
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>
+                        <p class="font-bold">Salin Tautan Video TikTok</p>
+                        <p class="text-gray-600">Buka aplikasi TikTok dan salin tautan video yang ingin Anda unduh.</p>
+                    </li>
+                    <li>
+                        <p class="font-bold">Tempel Tautan di qTikSave</p>
+                        <p class="text-gray-600">Tempel tautan video TikTok yang telah Anda salin ke dalam kotak input di atas.</p>
+                    </li>
+                    <li>
+                        <p class="font-bold">Klik Tombol "KIRIM"</p>
+                        <p class="text-gray-600">Klik tombol "KIRIM" untuk memproses tautan video TikTok Anda.</p>
+                    </li>
+                    <li>
+                        <p class="font-bold">Unduh Video</p>
+                        <p class="text-gray-600">Setelah video diproses, Anda akan melihat beberapa opsi unduhan. Pilih format yang Anda inginkan dan klik tombol unduh. Setelah itu tekan lama video untuk mengunduh video</p>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="footer mt-16">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3>Contact Us</h3>
+                    <a href="mailto:qhairulpratama@gmail.com">Send Email</a>
+                </div>
+                <div>
+                    <h3>Legality</h3>
+                    <a href="#">Terms Of Service</a><br>
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <div>
+                    <h3>Community</h3>
+                    <a href="https://chat.whatsapp.com/IEzFm5hQz2fIwpI6NNDTvN">WhatsApp group</a><br>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <p>� TikLok 2024</p>
             </div>
         </div>
     </div>
+    <script>
+        function pasteClipboard() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('urlInput').value = text;
+            }).catch(err => {
+                console.error('Failed to read clipboard contents: ', err);
+            });
+        }
 
-    <!-- Input Box and Buttons -->
-    <div class="w-full max-w-md mt-4 px-1.5">
-        <div class="w-full bg-red-500 text-white py-2 flex items-center justify-between px-2">
-            <input id="url-input" type="text" placeholder="Paste your link here" class="bg-red-500 text-white w-full outline-none">
-            <button onclick="pasteLink()" class="ml-2">
-                <i class="fas fa-paste text-xl"></i>
-            </button>
-        </div>
-        <div class="h-1"></div>
-        <button id="download-button" onclick="downloadVideo()" class="w-full bg-blue-600 text-white py-2 text-xl font-bold">DOWNLOAD</button>
-    </div>
+        function sendLink() {
+            const url = document.getElementById('urlInput').value;
+            const apiUrl = `https://api.tiklydown.eu.org/api/download/v5?url=${encodeURIComponent(url)}`;
+            const submitButton = document.getElementById('submitButton');
+            submitButton.innerText = 'Loading...';
 
-    <!-- Placeholder for video -->
-    <div id="video-placeholder" class="w-full max-w-md mt-4 bg-gray-200 flex flex-col items-center justify-center p-4 mx-0.75"></div>
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 200) {
+                        const result = data.result;
+                        const apiResultDiv = document.getElementById('apiResult');
+                        const title = result.title;
+                        const shortTitle = title.length > 50 ? title.substring(0, 50) + '...' : title;
+                        apiResultDiv.innerHTML = `
+                            <h3 class="text-xl font-bold">Video Details</h3>
+                            <p><strong>Title:</strong> <span id="titleText">${shortTitle}</span> <a href="#" id="readMore" class="text-blue-500">baca selengkapnya...</a><a href="#" id="readLess" class="text-blue-500" style="display:none;">baca sedikit...</a></p>
+                            <div class="relative">
+                                <video controls class="mt-2 w-full rounded-md">
+                                    <source src="${result.play}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <div class="absolute top-2 left-2 flex items-center">
+                                    <img src="${result.author.avatar}" alt="Author Avatar" class="w-12 h-12 rounded-full border-2 border-white">
+                                    <div class="ml-2">
+                                        <p class="font-bold text-white">${result.author.nickname}</p>
+                                        <p class="text-sm text-white">${result.author.unique_id}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-play text-gray-500 mr-1"></i>
+                                    <span>${result.play_count}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-heart text-red-500 mr-1"></i>
+                                    <span>${result.digg_count}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-comment text-gray-500 mr-1"></i>
+                                    <span>${result.comment_count}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-share text-gray-500 mr-1"></i>
+                                    <span>${result.share_count}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-bookmark text-gray-500 mr-1"></i>
+                                    <span>${result.collect_count}</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <a href="${result.play}" download class="download-button">Download Video</a>
+                                <a href="${result.hdplay}" download class="download-button">Download Video HD</a>
+                                <a href="${result.wmplay}" download class="download-button">Download Video WM</a>
+                            </div>
+                            <div class="mt-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="30px" height="30px" viewBox="0 0 100 100" id="music">
+                                    <g id="_x37_7_Essential_Icons">
+                                        <path id="Music" d="M88.3 11.5c-.5-.4-1.1-.5-1.7-.4l-48 10c-.9.2-1.6 1-1.6 2v40.8c-2.7-3-6.6-4.8-11-4.8-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15V38.6l44-9.2v24.4c-2.7-3-6.7-4.8-11-4.8-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15V13c0-.6-.3-1.2-.7-1.5zM26 85c-6.1 0-11-4.9-11-11s4.9-11 11-11 11 4.9 11 11-4.9 11-11 11zm48-10c-6.1 0-11-4.9-11-11s4.9-11 11-11 11 4.9 11 11-4.9 11-11 11zm11-49.6l-44 9.2v-9.9l44-9.2v9.9z"></path>
+                                    </g>
+                                </svg>
+                                <p class="ml-2 font-bold">${result.music_info.title}</p>
+                            </div>
+                            <div class="mt-4">
+                                <audio controls class="w-full">
+                                    <source src="${result.music_info.play}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                                <a href="${result.music}" download class="block w-full text-center download-button mt-2">Download MP3</a>
+                            </div>
+                        `;
 
-    <!-- Footer -->
-    <div class="w-full max-w-md mt-4 flex flex-col items-center text-center mx-0.75">
-        <i class="fas fa-infinity text-4xl"></i>
-        <p class="mt-2 text-black text-lg font-bold">
-            Unduh video TikTok tanpa batasan dan simpan langsung ke galeri Anda dengan mudah dan cepat.
-        </p>
-    </div>
+                        document.getElementById('readMore').addEventListener('click', function(event) {
+                            event.preventDefault();
+                            document.getElementById('titleText').innerText = title;
+                            this.style.display = 'none';
+                            document.getElementById('readLess').style.display = 'inline';
+                        });
 
-    <!-- Instructions -->
-    <div class="w-full max-w-md mt-4 px-4 py-6 bg-gray-100 rounded-lg shadow-md text-center mx-0.75">
-        <h2 class="text-2xl font-bold mb-4">Cara Menggunakan TikTok Downloader</h2>
-        <ol class="list-decimal list-inside text-left">
-            <li>Buka aplikasi TikTok dan salin tautan video yang ingin Anda unduh.</li>
-            <li>Tempel tautan video ke dalam kotak input di atas.</li>
-            <li>Klik tombol "DOWNLOAD" dan tunggu beberapa detik.</li>
-            <li>Setelah video siap, Anda dapat mengunduh video, video HD, atau musiknya.</li>
-        </ol>
-    </div>
-
-    <!-- About Us -->
-    <div class="w-full max-w-md mt-4 px-4 py-6 bg-blue-600 text-white rounded-lg shadow-md text-center mx-0.75">
-        <h2 class="text-2xl font-bold mb-4">Tentang Kami</h2>
-        <p class="mb-4">TIKDOWN7 adalah salah satu alat online terbaik untuk download video TikTok tanpa watermark. Alat ini juga dapat download musik MP3 TikTok secara gratis.</p>
-        <h3 class="text-xl font-bold mb-2">Tautan Cepat</h3>
-        <ul class="list-none">
-            <li><a href="#" class="underline">Ketentuan Layanan</a></li>
-            <li><a href="#" class="underline">Kebijakan Privasi</a></li>
-            <li><a href="#" class="underline">Hubungi Kami</a></li>
-        </ul>
-        <h3 class="text-xl font-bold mt-4 mb-2">Lebih Banyak Alat</h3>
-        <ul class="list-none">
-            <li><a href="index2.html" class="underline">YouTube Video Downloader</a></li>
-            <li><a href="index3.html" class="underline">Instagram Video Downloader</a></li>
-        </ul>
-        <p class="mt-4">2024 © TIKDOWN7, by craft7 YT</p>
-    </div>
+                        document.getElementById('readLess').addEventListener('click', function(event) {
+                            event.preventDefault();
+                            document.getElementById('titleText').innerText = shortTitle;
+                            this.style.display = 'none';
+                            document.getElementById('readMore').style.display = 'inline';
+                        });
+                    } else {
+                        document.getElementById('apiResult').innerText = `Error: ${data.message}`;
+                    }
+                    submitButton.innerText = 'KIRIM';
+                })
+                .catch(error => {
+                    document.getElementById('apiResult').innerText = `Error: ${error}`;
+                    submitButton.innerText = 'KIRIM';
+                });
+        }
+    </script>
 </body>
 </html>
