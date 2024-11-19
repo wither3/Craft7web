@@ -168,11 +168,13 @@
         <div class="footer mt-16">
             <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
-                    <h3>Contact Us</h3>
-                    <a href="mailto:qhairulpratama@gmail.com">Send Email</a>
-                </div>
+                    <h3>Fitur Lainnya</h3>
+                    <a href="index4.html">Apple music downloader</a><br>
+       <a href="spotify.html">Spotify downloader</a>
+       
+         </div>
                 <div>
-                    <h3>Legality</h3>
+                    <h3>legality</h3>
                     <a href="#">Terms Of Service</a><br>
                     <a href="#">Privacy Policy</a>
                 </div>
@@ -182,116 +184,142 @@
                 </div>
             </div>
             <div class="text-center mt-8">
-                <p>© TikLok 2024</p>
+                <p>© qTikSave 2024</p>
             </div>
         </div>
     </div>
     <script>
-        function pasteClipboard() {
-            navigator.clipboard.readText().then(text => {
-                document.getElementById('urlInput').value = text;
-            }).catch(err => {
-                console.error('Failed to read clipboard contents: ', err);
-            });
-        }
+    function sendLink() {
+        const url = document.getElementById('urlInput').value;
+        const apiUrl = `https://tiksave-test.vercel.app/api/tiktok/download?url=${encodeURIComponent(url)}`;
+        const submitButton = document.getElementById('submitButton');
+        submitButton.innerText = 'Loading...';
 
-        function sendLink() {
-            const url = document.getElementById('urlInput').value;
-            const apiUrl = `https://api.tiklydown.eu.org/api/download/v5?url=${encodeURIComponent(url)}`;
-            const submitButton = document.getElementById('submitButton');
-            submitButton.innerText = 'Loading...';
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const { tikwmData, tiksaveData } = data;
 
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 200) {
-                        const result = data.result;
-                        const apiResultDiv = document.getElementById('apiResult');
-                        const title = result.title;
-                        const shortTitle = title.length > 50 ? title.substring(0, 50) + '...' : title;
-                        apiResultDiv.innerHTML = `
-                            <h3 class="text-xl font-bold">Video Details</h3>
-                            <p><strong>Title:</strong> <span id="titleText">${shortTitle}</span> <a href="#" id="readMore" class="text-blue-500">baca selengkapnya...</a><a href="#" id="readLess" class="text-blue-500" style="display:none;">baca sedikit...</a></p>
-                            <div class="relative">
-                                <video controls class="mt-2 w-full rounded-md">
-                                    <source src="${result.play}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                                <div class="absolute top-2 left-2 flex items-center">
-                                    <img src="${result.author.avatar}" alt="Author Avatar" class="w-12 h-12 rounded-full border-2 border-white">
-                                    <div class="ml-2">
-                                        <p class="font-bold text-white">${result.author.nickname}</p>
-                                        <p class="text-sm text-white">${result.author.unique_id}</p>
-                                    </div>
+                    // Cek properti yang diperlukan
+                    if (!tikwmData || !tiksaveData) {
+                        throw new Error("Data tidak lengkap dari API");
+                    }
+
+                    const apiResultDiv = document.getElementById('apiResult');
+
+                    // Gunakan fallback untuk properti undefined
+                    const title = tiksaveData.title || "Tidak ada judul";
+                    const shortTitle = title.length > 50 ? title.substring(0, 50) + '...' : title;
+
+                    const nickname = tikwmData.nickname || "Tidak diketahui";
+                    const nama = tikwmData.nama || "Tidak diketahui";
+                    const profile = tikwmData.profile || "https://via.placeholder.com/150";
+                    const soundTitle = tikwmData.soundTitle || "Tidak ada judul musik";
+                    const nowatermark = tikwmData.videoLinks?.nowatermark || "#";
+                    const watermark = tikwmData.videoLinks?.watermark || "#";
+                    const mp3Link = tiksaveData.downloadLinks[3]?.link || "#";
+
+                    apiResultDiv.innerHTML = `
+                        <h3 class="text-xl font-bold">Video Details</h3>
+                        <p><strong>Title:</strong> <span id="titleText">${shortTitle}</span> <a href="#" id="readMore" class="text-blue-500">baca selengkapnya...</a><a href="#" id="readLess" class="text-blue-500" style="display:none;">baca sedikit...</a></p>
+                        <div class="relative">
+                            <video controls class="mt-2 w-full rounded-md">
+                                <source src="${nowatermark}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="absolute top-2 left-2 flex items-center">
+                                <img src="${profile}" alt="Author Avatar" class="w-12 h-12 rounded-full border-2 border-white">
+                                <div class="ml-2">
+                                    <p class="font-bold text-white">${nickname}</p>
+                                    <p class="text-sm text-white">${nama}</p>
                                 </div>
                             </div>
-                            <div class="flex justify-between items-center mt-4">
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
                                 <div class="flex items-center">
                                     <i class="fas fa-play text-gray-500 mr-1"></i>
-                                    <span>${result.play_count}</span>
+                                    <span>${tikwmData.penonton}</span>
                                 </div>
                                 <div class="flex items-center">
                                     <i class="fas fa-heart text-red-500 mr-1"></i>
-                                    <span>${result.digg_count}</span>
+                                    <span>${tikwmData.like}</span>
                                 </div>
                                 <div class="flex items-center">
                                     <i class="fas fa-comment text-gray-500 mr-1"></i>
-                                    <span>${result.comment_count}</span>
+                                    <span>${tikwmData.komen}</span>
                                 </div>
                                 <div class="flex items-center">
                                     <i class="fas fa-share text-gray-500 mr-1"></i>
-                                    <span>${result.share_count}</span>
+                                    <span>${tikwmData.bagikan}</span>
                                 </div>
                                 <div class="flex items-center">
                                     <i class="fas fa-bookmark text-gray-500 mr-1"></i>
-                                    <span>${result.collect_count}</span>
+                                    <span>${tikwmData.favorit}</span>
                                 </div>
                             </div>
-                            <div class="mt-4 flex flex-wrap gap-2">
-                                <a href="${result.play}" download class="download-button">Download Video</a>
-                                <a href="${result.hdplay}" download class="download-button">Download Video HD</a>
-                                <a href="${result.wmplay}" download class="download-button">Download Video WM</a>
-                            </div>
-                            <div class="mt-4 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="30px" height="30px" viewBox="0 0 100 100" id="music">
-                                    <g id="_x37_7_Essential_Icons">
-                                        <path id="Music" d="M88.3 11.5c-.5-.4-1.1-.5-1.7-.4l-48 10c-.9.2-1.6 1-1.6 2v40.8c-2.7-3-6.6-4.8-11-4.8-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15V38.6l44-9.2v24.4c-2.7-3-6.7-4.8-11-4.8-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15V13c0-.6-.3-1.2-.7-1.5zM26 85c-6.1 0-11-4.9-11-11s4.9-11 11-11 11 4.9 11 11-4.9 11-11 11zm48-10c-6.1 0-11-4.9-11-11s4.9-11 11-11 11 4.9 11 11-4.9 11-11 11zm11-49.6l-44 9.2v-9.9l44-9.2v9.9z"></path>
-                                    </g>
-                                </svg>
-                                <p class="ml-2 font-bold">${result.music_info.title}</p>
-                            </div>
-                            <div class="mt-4">
-                                <audio controls class="w-full">
-                                    <source src="${result.music_info.play}" type="audio/mpeg">
-                                    Your browser does not support the audio element.
-                                </audio>
-                                <a href="${result.music}" download class="block w-full text-center download-button mt-2">Download MP3</a>
-                            </div>
-                        `;
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <a href="${tiksaveData.downloadLinks[0].link}" download class="download-button">Download Video</a>
+            <a href="${tiksaveData.downloadLinks[2].link}" download class="download-button">Download Video HD</a> 
+      <a href="${watermark}" download class="download-button">Download Video WM</a>
+                        </div>
+                        <div class="mt-4 flex items-center">
+          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="30px" height="30px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    
+    <title>music [#995]</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
 
-                        document.getElementById('readMore').addEventListener('click', function(event) {
-                            event.preventDefault();
-                            document.getElementById('titleText').innerText = title;
-                            this.style.display = 'none';
-                            document.getElementById('readLess').style.display = 'inline';
-                        });
+</defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dribbble-Light-Preview" transform="translate(-260.000000, -3799.000000)" fill="#000000">
+            <g id="icons" transform="translate(56.000000, 160.000000)">
+                <path d="M211.987988,3643 L221.997998,3643 L221.997998,3641 L211.987988,3641 L211.987988,3643 Z M209.985986,3639 L209.985986,3651.535 C208.984985,3651.195 208.726727,3651 207.997998,3651 C205.785786,3651 204,3652.791 204,3655 C204,3657.209 205.782783,3659 207.993994,3659 C210.205205,3659 211.987988,3657.209 211.987988,3655 L211.987988,3645 L221.997998,3645 L221.997998,3651.535 C220.996997,3651.195 220.738739,3651 220.01001,3651 C217.797798,3651 216.012012,3652.791 216.012012,3655 C216.012012,3657.209 217.794795,3659 220.006006,3659 C222.217217,3659 224,3657.209 224,3655 L224,3639 L209.985986,3639 Z" id="music-[#995]">
 
-                        document.getElementById('readLess').addEventListener('click', function(event) {
-                            event.preventDefault();
-                            document.getElementById('titleText').innerText = shortTitle;
-                            this.style.display = 'none';
-                            document.getElementById('readMore').style.display = 'inline';
-                        });
-                    } else {
-                        document.getElementById('apiResult').innerText = `Error: ${data.message}`;
-                    }
-                    submitButton.innerText = 'KIRIM';
-                })
-                .catch(error => {
-                    document.getElementById('apiResult').innerText = `Error: ${error}`;
-                    submitButton.innerText = 'KIRIM';
-                });
-        }
-    </script>
+</path>
+            </g>
+        </g>
+    </g>
+</svg>              	
+                            <p class="ml-2 font-bold">${soundTitle}</p>
+                        </div>
+                        <div class="mt-4">
+                            <audio controls class="w-full">
+                                <source src="${mp3Link}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <a href="${mp3Link}" download class="block w-full text-center download-button mt-2">Download MP3</a>
+                        </div>
+                    `;
+
+                    // Event untuk readMore dan readLess
+                    document.getElementById('readMore').addEventListener('click', function (event) {
+                        event.preventDefault();
+                        document.getElementById('titleText').innerText = title;
+                        this.style.display = 'none';
+                        document.getElementById('readLess').style.display = 'inline';
+                    });
+
+                    document.getElementById('readLess').addEventListener('click', function (event) {
+                        event.preventDefault();
+                        document.getElementById('titleText').innerText = shortTitle;
+                        this.style.display = 'none';
+                        document.getElementById('readMore').style.display = 'inline';
+                    });
+
+                } else {
+                    document.getElementById('apiResult').innerText = `Error: ${data.message}`;
+                }
+                submitButton.innerText = 'KIRIM';
+            })
+            .catch(error => {
+                document.getElementById('apiResult').innerText = `Error: ${error.message}`;
+                submitButton.innerText = 'KIRIM';
+            });
+    }
+</script>
+
 </body>
 </html>
