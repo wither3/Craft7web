@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch TikSave API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TikSave API Fetch</h1>
+    <p>Masukkan URL TikTok:</p>
+    <input type="text" id="tiktokUrl" placeholder="Masukkan URL TikTok" style="width: 100%; padding: 10px;">
+    <button id="fetchBtn" style="padding: 10px 20px; margin-top: 10px;">Fetch Data</button>
+
+    <textarea id="result" readonly></textarea>
+
+    <script>
+        document.getElementById('fetchBtn').addEventListener('click', async () => {
+            const urlInput = document.getElementById('tiktokUrl').value.trim();
+            const resultArea = document.getElementById('result');
+            resultArea.value = 'Memuat data...';
+
+            if (!urlInput) {
+                resultArea.value = 'URL tidak boleh kosong.';
+                return;
+            }
+
+            try {
+                const apiUrl = `https://tiksave-test.vercel.app/api/download?url=${encodeURIComponent(urlInput)}`;
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                resultArea.value = JSON.stringify(data, null, 2); // Menampilkan respons API dalam format JSON
+            } catch (error) {
+                resultArea.value = `Terjadi kesalahan: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

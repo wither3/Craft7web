@@ -1,7 +1,7 @@
 <html>
 <head>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <style>
         .sidebar {
             transform: translateX(-100%);
@@ -30,22 +30,31 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             margin-top: 1rem;
         }
+        .map-image {
+            height: 200px;
+        }
+        .info-text {
+            font-size: 0.875rem; /* Tailwind's text-sm */
+            margin-bottom: 1px;
+        }
+        .more-text {
+            display: none;
+        }
     </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 </head>
-<body class="flex flex-col h-screen justify-between">
+<body class="flex flex-col h-screen justify-between bg-gray-100">
     <!-- Top Navigation Bar -->
     <div class="bg-[#1A67A7] flex items-center justify-between p-2 fixed top-0 left-0 right-0 z-20">
-        <i id="menuButton" class="fas fa-bars text-white text-lg cursor-pointer"></i>
+        <i class="fas fa-bars text-white text-lg cursor-pointer" id="menuButton"></i>
         <h1 class="text-white text-base font-bold">BERANDA</h1>
-        <i id="musicButton" class="fas fa-music text-white text-lg cursor-pointer"></i>
+        <i class="fas fa-music text-white text-lg cursor-pointer" id="musicButton"></i>
     </div>
-
     <!-- Sidebar Menu -->
-    <div id="sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-[#1A67A7] p-4 z-30">
+    <div class="sidebar fixed top-0 left-0 h-full w-64 bg-[#1A67A7] p-4 z-30" id="sidebar">
         <div class="flex justify-between items-center">
             <div class="text-white font-bold text-lg">Menu</div>
-            <i id="closeButton" class="fas fa-times text-white text-lg cursor-pointer"></i>
+            <i class="fas fa-times text-white text-lg cursor-pointer" id="closeButton"></i>
         </div>
         <ul class="text-white mt-4">
             <li class="py-2"><a href="tiktokd.html">TikTok downloader</a></li>
@@ -55,67 +64,19 @@
             <li class="py-2"><a href="index4.html">applemusic downloader</a></li>
         </ul>
     </div>
-
-    <!-- Main Content Area -->
-    <div class="flex-grow bg-white mt-12 mb-12">
-    
-    <div class="w-full max-w-screen-md mx-auto mt-4">
-            <iframe class="w-full h-72 md:h-96" src="https://www.youtube.com/embed/Ig6_NC9feS8?si=HWL1eKUWMl7qVEnm" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <h2 class="mt-4 text-lg font-bold">2 shader pojav launcher realistis untuk versi 1.20.1</h2>
-        <p class="mt-2">shader ini mungkin hanya bisa di render zink GPU Mali, klik tombol download di bawah untuk mendownload shader</p>
-        <div class="flex space-x-4 mt-4">
-            <a href="https://sfile.mobi/3X6Qdrbai43" class="download-button">Shader 1</a>
-            <a href="https://sfile.mobi/9c8T73oyU84" class="download-button">Shader 2</a>
-        </div>
-        <div class="divider"></div>
-    
-        <div class="w-full max-w-screen-md mx-auto mt-4">
-            <iframe class="w-full h-72 md:h-96" src="https://www.youtube.com/embed/xA0C8vsc3-w?si=GdV6XnI8P9cvpsHn" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <h2 class="mt-4 text-lg font-bold">2 shader pojav launcher realistis untuk versi 1.20.1</h2>
-        <p class="mt-2">shader ini mungkin hanya bisa di render zink GPU Mali, klik tombol download di bawah untuk mendownload shader</p>
-        <div class="flex space-x-4 mt-4">
-            <a href="https://sfile.mobi/58WDWOLu5Gg" class="download-button">Shader 1</a>
-            <a href="https://sfile.mobi/4bQDpFeJoA0" class="download-button">Shader 2</a>
-        </div>
-        <div class="divider"></div>
-        
-        <div class="mt-4">
-            <div class="w-full max-w-screen-md mx-auto">
-                <iframe class="w-full h-72 md:h-96" src="https://www.youtube.com/embed/wdtzczTdtM4?si=W70pPYYUwYVBejp1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <h2 class="mt-4 text-lg font-bold">2 shader pojav launcher render virgl 1.16.5</h2>
-            <p class="mt-2">shader ini support render virgl, dan telah di coba di chip Snapdragon 865 di cloud phone redfinger.</p>
-            <div class="flex space-x-4 mt-4">
-                <a href="https://sfile.mobi/7wE2OeWYyQL" class="download-button">Shader 1</a>
-                <a href="https://sfile.mobi/7Lq2WdJl1mY" class="download-button">Shader 2</a>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <div class="mt-4">
-            <div class="w-full max-w-screen-md mx-auto">
-                <iframe class="w-full h-72 md:h-96" src="https://www.youtube.com/embed/Dpv8pjEsu-k?si=kXCggraA1smMpi-Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <h2 class="mt-4 text-lg font-bold">Top 3 shader pojav launcher zink Beta 1.12.2</h2>
-            <p class="mt-2">video di atas adalah hasil dari replay mod agar terlihat lebih lancar dan cinematic, shader ini support versi 1.12.2 dan menggunakan render zink</p>
-            <div class="flex space-x-4 mt-4">
-                <a href="https://sfile.mobi/4TWQqJ3XTOv" class="download-button">Shader 1</a>
-                <a href="https://sfile.mobi/1VgQECezCsP" class="download-button">Shader 2</a>
-                <a href="https://sfile.mobi/i0grzdTw4g7" class="download-button">Shader 3</a>
-            </div>
+    <!-- Main Content -->
+    <div class="flex-grow mt-12 mb-12 p-4">
+        <div class="grid grid-cols-1 gap-4" id="newsContainer">
+            <!-- News items will be dynamically inserted here -->
         </div>
     </div>
-
     <!-- Bottom Navigation Bar -->
     <div class="bg-[#1A67A7] flex justify-around p-2 fixed bottom-0 left-0 right-0 z-10">
         <a href="index.html"><i class="fas fa-home text-yellow-500 text-xl cursor-pointer"></i></a>
-        <a href="tool.html"><i class="fas fa-file-alt text-white text-xl cursor-pointer"></i></a>
+        <a href="halaman2.html"><i class="fas fa-file-alt text-white text-xl cursor-pointer"></i></a>
         <a href="link.html"><i class="fas fa-link text-white text-xl cursor-pointer"></i></a>
     </div>
-
-    <audio id="audioPlayer" src="https://femboy.beauty/7Dn5-" preload="auto"></audio>
-
+    <audio id="audioPlayer" preload="auto" src="https://femboy.beauty/7Dn5-"></audio>
     <script>
         const menuButton = document.getElementById('menuButton');
         const closeButton = document.getElementById('closeButton');
@@ -138,6 +99,49 @@
                 audioPlayer.pause();
             }
         });
+
+        // Fetch earthquake data from API
+        fetch('https://bmkg-gempa-api-rho.vercel.app/')
+            .then(response => response.json())
+            .then(data => {
+                const newsContainer = document.getElementById('newsContainer');
+                const item = data[0]; // Only use the first item
+                const newsItem = document.createElement('div');
+                newsItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-lg', 'mb-4');
+                newsItem.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-2 text-[#1A67A7] text-center">Gempa Indonesia Terkini</h2>
+                    <div class="flex">
+                        <img alt="Peta lokasi gempa dengan magnitude ${item.magnitude} dan kedalaman ${item.kedalaman}" class="map-image rounded-lg mr-4" src="${item.gambarUrl}" />
+                        <div class="w-[calc(75%-20px)]">
+                            <p class="text-gray-700 info-text"><strong>Waktu:</strong> ${item.waktu}</p>
+                            <p class="text-gray-700 info-text"><strong>Magnitude:</strong> ${item.magnitude}</p>
+                            <p class="text-gray-700 info-text"><strong>Kedalaman:</strong> ${item.kedalaman}</p>
+                            <p class="text-gray-700 info-text"><strong>Koordinat:</strong> ${item.koordinat}</p>
+                            <p class="text-gray-700 info-text"><strong>Lokasi:</strong> <a href="#" class="text-blue-500 text-sm" id="toggleText">Baca selengkapnya...</a></p>
+                            <div id="moreText" class="more-text">
+                                <p class="text-gray-700 info-text">${item.lokasi}</p>
+                                <p class="text-gray-700 info-text"><strong>Dirasakan:</strong> ${item.dirasakan}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                newsContainer.appendChild(newsItem);
+
+                const toggleText = document.getElementById('toggleText');
+                const moreText = document.getElementById('moreText');
+
+                toggleText.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (moreText.style.display === 'none' || moreText.style.display === '') {
+                        moreText.style.display = 'block';
+                        toggleText.textContent = 'Baca sedikit...';
+                    } else {
+                        moreText.style.display = 'none';
+                        toggleText.textContent = 'Baca selengkapnya...';
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching earthquake data:', error));
     </script>
 </body>
 </html>
