@@ -40,6 +40,28 @@
         .more-text {
             display: none;
         }
+        .api-section {
+            display: none;
+        }
+        .api-section.open {
+            display: block;
+        }
+        .api-response-box {
+            background-color: black;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            position: relative;
+        }
+        .copy-icon {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            cursor: pointer;
+        }
     </style>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 </head>
@@ -69,6 +91,66 @@
         <div class="grid grid-cols-1 gap-4" id="newsContainer">
             <!-- News items will be dynamically inserted here -->
         </div>
+        <!-- API Test UI -->
+        <div class="bg-white p-4 rounded-lg shadow-lg mt-4">
+            <div class="flex justify-between items-center cursor-pointer" id="apiToggle1">
+                <h2 class="text-2xl font-bold mb-2 text-[#1A67A7]">YT downloaer 🔥</h2>
+                <i class="fas fa-chevron-down text-[#1A67A7]"></i>
+            </div>
+            <div id="apiSection1" class="api-section">
+                <form id="apiTestForm1" class="space-y-4">
+                    <div>
+                        <label for="url1" class="block text-sm font-medium text-gray-700">Video URL</label>
+                        <input type="text" id="url1" name="url1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="https://youtu.be/0uI1rOaQ7uM?si=msxXrUuY5g8zYnCZ">
+                    </div>
+                    <div>
+                        <label for="format1" class="block text-sm font-medium text-gray-700">Format</label>
+                        <select id="format1" name="format1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="mp3">mp3</option>
+                            <option value="m4a">m4a</option>
+                            <option value="webm">webm</option>
+                            <option value="acc">acc</option>
+                            <option value="flac">flac</option>
+                            <option value="opus">opus</option>
+                            <option value="ogg">ogg</option>
+                            <option value="wav">wav</option>
+                            <option value="4k">4k</option>
+                            <option value="360">360</option>
+                            <option value="480">480</option>
+                            <option value="720">720</option>
+                            <option value="1080">1080</option>
+                            <option value="1440">1440</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="download-button w-full">Fetch</button>
+                </form>
+                <div id="apiResponse1" class="api-response-box mt-4" contenteditable="true">
+                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="white">
+                        <path d="M180 936q-24 0-42-18t-18-42V276h60v600h480v60H180Zm120-120q-24 0-42-18t-18-42V156q0-24 18-42t42-18h420q24 0 42 18t18 42v600q0 24-18 42t-42 18H300Zm0-60h420V156H300v600Zm0 0V156v600Z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-lg mt-4">
+            <div class="flex justify-between items-center cursor-pointer" id="apiToggle2">
+                <h2 class="text-2xl font-bold mb-2 text-[#1A67A7]">TikTok downloader 🔥</h2>
+                <i class="fas fa-chevron-down text-[#1A67A7]"></i>
+            </div>
+            <div id="apiSection2" class="api-section">
+                <form id="apiTestForm2" class="space-y-4">
+                    <div>
+                        <label for="url2" class="block text-sm font-medium text-gray-700">TikTok Video URL</label>
+                        <input type="text" id="url2" name="url2" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="https://vt.tiktok.com/ZSjajunM5/">
+                    </div>
+                    <button type="submit" class="download-button w-full">Fetch</button>
+                </form>
+                <div id="apiResponse2" class="api-response-box mt-4" contenteditable="true">
+                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="white">
+                        <path d="M180 936q-24 0-42-18t-18-42V276h60v600h480v60H180Zm120-120q-24 0-42-18t-18-42V156q0-24 18-42t42-18h420q24 0 42 18t18 42v600q0 24-18 42t-42 18H300Zm0-60h420V156H300v600Zm0 0V156v600Z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- Bottom Navigation Bar -->
     <div class="bg-[#1A67A7] flex justify-around p-2 fixed bottom-0 left-0 right-0 z-10">
@@ -83,6 +165,14 @@
         const sidebar = document.getElementById('sidebar');
         const musicButton = document.getElementById('musicButton');
         const audioPlayer = document.getElementById('audioPlayer');
+        const apiToggle1 = document.getElementById('apiToggle1');
+        const apiSection1 = document.getElementById('apiSection1');
+        const copyIcon1 = document.querySelector('#apiResponse1 .copy-icon');
+        const apiResponse1 = document.getElementById('apiResponse1');
+        const apiToggle2 = document.getElementById('apiToggle2');
+        const apiSection2 = document.getElementById('apiSection2');
+        const copyIcon2 = document.querySelector('#apiResponse2 .copy-icon');
+        const apiResponse2 = document.getElementById('apiResponse2');
 
         menuButton.addEventListener('click', () => {
             sidebar.classList.toggle('open');
@@ -98,6 +188,52 @@
             } else {
                 audioPlayer.pause();
             }
+        });
+
+        apiToggle1.addEventListener('click', () => {
+            apiSection1.classList.toggle('open');
+            const icon = apiToggle1.querySelector('i');
+            if (apiSection1.classList.contains('open')) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+
+        apiToggle2.addEventListener('click', () => {
+            apiSection2.classList.toggle('open');
+            const icon = apiToggle2.querySelector('i');
+            if (apiSection2.classList.contains('open')) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+
+        copyIcon1.addEventListener('click', () => {
+            const range = document.createRange();
+            range.selectNodeContents(apiResponse1);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand('copy');
+            selection.removeAllRanges();
+            alert('Text copied to clipboard');
+        });
+
+        copyIcon2.addEventListener('click', () => {
+            const range = document.createRange();
+            range.selectNodeContents(apiResponse2);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand('copy');
+            selection.removeAllRanges();
+            alert('Text copied to clipboard');
         });
 
         // Fetch earthquake data from API
@@ -142,6 +278,47 @@
                 });
             })
             .catch(error => console.error('Error fetching earthquake data:', error));
+
+        // Handle API Test Form 1 Submission
+        const apiTestForm1 = document.getElementById('apiTestForm1');
+
+        apiTestForm1.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const url = document.getElementById('url1').value;
+            const format = document.getElementById('format1').value;
+            const apiUrl = `https://ytdownloader-beryl.vercel.app/api/download?url=${encodeURIComponent(url)}&format=${format}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    apiResponse1.textContent = `${apiUrl}
+
+${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    apiResponse1.textContent = `Error: ${error.message}`;
+                });
+        });
+
+        // Handle API Test Form 2 Submission
+        const apiTestForm2 = document.getElementById('apiTestForm2');
+
+        apiTestForm2.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const url = document.getElementById('url2').value;
+            const apiUrl = `https://tiksave-test.vercel.app/api/tiktok/download?url=${encodeURIComponent(url)}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    apiResponse2.textContent =`${apiUrl}
+                    
+${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    apiResponse2.textContent = `Error: ${error.message}`;
+                });
+        });
     </script>
 </body>
 </html>
