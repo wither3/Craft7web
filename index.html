@@ -91,9 +91,14 @@
         <div class="grid grid-cols-1 gap-4" id="newsContainer">
             <!-- News items will be dynamically inserted here -->
         </div>
+        
         <!-- API Test UI -->
-        <div class="bg-white p-4 rounded-lg shadow-lg mt-4">
-            <div class="flex justify-between items-center cursor-pointer" id="apiToggle1">
+
+        <p class="font-serif ...">BERIKUT ADALAH REST API GRATIS</p>
+<p class="font-light ...">Gunakan dengan bijak</p>
+
+<div class="bg-white p-4 rounded-lg shadow-lg mt-4">
+           <div class="flex justify-between items-center cursor-pointer" id="apiToggle1">
                 <h2 class="text-2xl font-bold mb-2 text-[#1A67A7]">YT downloaer 🔥</h2>
                 <i class="fas fa-chevron-down text-[#1A67A7]"></i>
             </div>
@@ -151,6 +156,27 @@
                 </div>
             </div>
         </div>
+        
+  <div class="bg-white p-4 rounded-lg shadow-lg mt-4">
+            <div class="flex justify-between items-center cursor-pointer" id="apiToggle3">
+                <h2 class="text-2xl font-bold mb-2 text-[#1A67A7]">BMKG gempa 🔥</h2>
+                <i class="fas fa-chevron-down text-[#1A67A7]"></i>
+            </div>
+            <div id="apiSection3" class="api-section">
+                <form id="apiTestForm3" class="space-y-4">
+                    
+                    <button type="submit" class="download-button w-full">Fetch</button>
+                </form>
+                
+                <div id="apiResponse3" class="api-response-box mt-4" contenteditable="true">
+<svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="white">
+                        <path d="M180 936q-24 0-42-18t-18-42V276h60v600h480v60H180Zm120-120q-24 0-42-18t-18-42V156q0-24 18-42t42-18h420q24 0 42 18t18 42v600q0 24-18 42t-42 18H300Zm0-60h420V156H300v600Zm0 0V156v600Z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        
     </div>
     <!-- Bottom Navigation Bar -->
     <div class="bg-[#1A67A7] flex justify-around p-2 fixed bottom-0 left-0 right-0 z-10">
@@ -173,6 +199,10 @@
         const apiSection2 = document.getElementById('apiSection2');
         const copyIcon2 = document.querySelector('#apiResponse2 .copy-icon');
         const apiResponse2 = document.getElementById('apiResponse2');
+        const apiToggle3 = document.getElementById('apiToggle3');
+        const apiSection3 = document.getElementById('apiSection3');
+        const copyIcon3 = document.querySelector('#apiResponse3 .copy-icon');
+        const apiResponse3 = document.getElementById('apiResponse3');
 
         menuButton.addEventListener('click', () => {
             sidebar.classList.toggle('open');
@@ -213,6 +243,17 @@
                 icon.classList.add('fa-chevron-down');
             }
         });
+    apiToggle3.addEventListener('click', () => {
+            apiSection3.classList.toggle('open');
+            const icon = apiToggle3.querySelector('i');
+            if (apiSection3.classList.contains('open')) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
 
         copyIcon1.addEventListener('click', () => {
             const range = document.createRange();
@@ -228,6 +269,16 @@
         copyIcon2.addEventListener('click', () => {
             const range = document.createRange();
             range.selectNodeContents(apiResponse2);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand('copy');
+            selection.removeAllRanges();
+            alert('Text copied to clipboard');
+        });
+    copyIcon3.addEventListener('click', () => {
+            const range = document.createRange();
+            range.selectNodeContents(apiResponse3);
             const selection = window.getSelection();
             selection.removeAllRanges();
             selection.addRange(range);
@@ -319,6 +370,26 @@ ${JSON.stringify(data, null, 2)}`;
                     apiResponse2.textContent = `Error: ${error.message}`;
                 });
         });
+    
+    const apiTestForm3 = document.getElementById('apiTestForm3');
+
+        apiTestForm3.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const apiUrl = `https://bmkg-gempa-api-rho.vercel.app/`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    apiResponse3.textContent =`${apiUrl}
+                    
+${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    apiResponse3.textContent = `Error: ${error.message}`;
+                });
+        });
+    
     </script>
 </body>
 </html>
