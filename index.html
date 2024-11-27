@@ -95,7 +95,7 @@
             font-size: 14px;
             transition: background-color 0.3s;
             margin-bottom: 1px;
-            height: 90%;
+            height: 35px;
             width: 90%;
         }
         .btn-fetch:hover {
@@ -318,10 +318,11 @@
         function fetchGempa() {
             const output = document.getElementById('gempa-output');
             output.textContent = 'Loading...';
-            fetch('https://bmkg-gempa-api-rho.vercel.app/')
+            const bmkgApi ='https://bmkg-gempa-api-rho.vercel.app/';
+            fetch(bmkgApi)
                 .then(response => response.json())
                 .then(data => {
-                    output.textContent = JSON.stringify(data, null, 2);
+                    output.textContent =`${bmkgApi}\n\n${JSON.stringify(data, null, 2)}`;
                 })
                 .catch(error => {
                     output.textContent = `Error: ${error.message}`;
@@ -340,10 +341,11 @@
             }
 
             output.textContent = 'Loading...';
-            fetch(`https://ytdownloader-beryl.vercel.app/api/download?url=${encodeURIComponent(url)}&format=${format}`)
+            const YTapi =`https://ytdownloader-beryl.vercel.app/api/download?url=${encodeURIComponent(url)}&format=${format}`;
+            fetch(YTapi)
                 .then(response => response.json())
                 .then(data => {
-                    output.textContent = JSON.stringify(data, null, 2);
+                    output.textContent =`${YTapi}\n\n${JSON.stringify(data, null, 2)}`;
                 })
                 .catch(error => {
                     output.textContent = `Error: ${error.message}`;
@@ -361,10 +363,11 @@
             }
 
             output.textContent = 'Loading...';
-            fetch(`https://tiksave-test.vercel.app/api/download?url=${encodeURIComponent(url)}`)
+            const apiUrl =`https://rullz-api.vercel.app/tiktok/download?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    output.textContent = JSON.stringify(data, null, 2);
+                    output.textContent =`${apiUrl}\n\n ${JSON.stringify(data, null, 2)}`;
                 })
                 .catch(error => {
                     output.textContent = `Error: ${error.message}`;
