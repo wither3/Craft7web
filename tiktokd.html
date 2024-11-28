@@ -99,12 +99,12 @@
 <body class="bg-white text-gray-800">
     <div class="navbar border-b border-black p-2">
         <div class="flex items-center justify-between max-w-7xl mx-auto">
-            <h1 class="text-4xl font-bold ml-2 rainbow-text">qTik<span class="rainbow-text">Save</span></h1>
+            <h1 class="text-4xl font-bold ml-2 rainbow-text"><p class="font-serif">TikiDL</p></h1>
             <i class="fas fa-bars text-xl ml-2 mr-2"></i>
         </div>
     </div>
     <div class="flex flex-col items-center justify-center min-h-screen p-4 pt-20">
-        <p class="mt-4 text-center text-gray-600">qTikSave adalah situs web Pengunduh TikTok yang cepat dan bebas iklan, Masukkan Tautan Anda Di Bawah.</p>
+        <p class="mt-4 text-center text-gray-600">TikiDL adalah situs web Pengunduh TikTok yang cepat dan bebas iklan, Masukkan Tautan Anda Di Bawah.</p>
         <div class="mt-6 w-full max-w-md">
             <div class="relative">
                 <input id="urlInput" type="text" placeholder="Input URL..." class="w-full p-3 border border-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -116,7 +116,9 @@
         </div>
         <div id="apiResult" class="mt-4 w-full max-w-md p-4 border border-gray-200 rounded-md shadow-md"></div>
         <div class="mt-16 text-center">
-            <h2 class="text-4xl font-bold">Why should you use <span class="rainbow-text">qTik<span class="rainbow-text">Save</span></span></h2>
+            <h2 style="font-family: Copperplate, 'Copperplate Gothic Light', fantasy; font-size: 24px; font-weight: 700; line-height: 26.4px;">
+                Why should you use <span style="color: #f06;">Tiki<span style="color: #f06;">DL</span></span>
+            </h2>       
         </div>
         <div class="mt-8 w-full max-w-md">
             <div class="p-4 border border-gray-200 rounded-md shadow-md">
@@ -143,7 +145,7 @@
             </div>
         </div>
         <div class="mt-16 w-full max-w-2xl">
-            <h2 class="text-3xl font-bold text-center mb-4">Cara Menggunakan qTikSave</h2>
+            <h2 class="text-3xl font-bold text-center mb-4">Cara Menggunakan web TikiDL</h2>
             <div class="bg-gray-100 p-6 rounded-md shadow-md">
                 <ol class="list-decimal list-inside space-y-4">
                     <li>
@@ -170,11 +172,10 @@
                 <div>
                     <h3>Fitur Lainnya</h3>
                     <a href="index4.html">Apple music downloader</a><br>
-       <a href="spotify.html">Spotify downloader</a>
-       
-         </div>
+                    <a href="spotify.html">Spotify downloader</a>
+                </div>
                 <div>
-                    <h3>legality</h3>
+                    <h3>Legality</h3>
                     <a href="#">Terms Of Service</a><br>
                     <a href="#">Privacy Policy</a>
                 </div>
@@ -184,41 +185,65 @@
                 </div>
             </div>
             <div class="text-center mt-8">
-                <p>© qTikSave 2024</p>
+                <p>© TikiDL 2024</p>
             </div>
         </div>
     </div>
     <script>
+    function pasteClipboard() {
+        navigator.clipboard.readText()
+            .then(text => {
+                document.getElementById('urlInput').value = text;
+            })
+            .catch(err => {
+                console.error('Failed to read clipboard contents: ', err);
+            });
+    }
+
+    function downloadFile(url, fileName) {
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                const objectURL = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = objectURL;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(objectURL);
+            })
+            .catch(error => console.error('Error downloading the file:', error));
+    }
+
     function sendLink() {
         const url = document.getElementById('urlInput').value;
-        const apiUrl = `https://tiksave-test.vercel.app/api/tiktok/download?url=${encodeURIComponent(url)}`;
+        const apiUrl = `https://api.tiklydown.eu.org/api/download/v5?url=${encodeURIComponent(url)}`;
         const submitButton = document.getElementById('submitButton');
         submitButton.innerText = 'Loading...';
 
         fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    const { tikwmData, tiksaveData } = data;
-
-                    // Cek properti yang diperlukan
-                    if (!tikwmData || !tiksaveData) {
-                        throw new Error("Data tidak lengkap dari API");
-                    }
+                if (data.status === 200) {
+                    const result = data.result;
 
                     const apiResultDiv = document.getElementById('apiResult');
-
-                    // Gunakan fallback untuk properti undefined
-                    const title = tiksaveData.title || "Tidak ada judul";
+                    const title = result.title || "Tidak ada judul";
                     const shortTitle = title.length > 50 ? title.substring(0, 50) + '...' : title;
 
-                    const nickname = tikwmData.nickname || "Tidak diketahui";
-                    const nama = tikwmData.nama || "Tidak diketahui";
-                    const profile = tikwmData.profile || "https://via.placeholder.com/150";
-                    const soundTitle = tikwmData.soundTitle || "Tidak ada judul musik";
-                    const nowatermark = tikwmData.videoLinks?.nowatermark || "#";
-                    const watermark = tikwmData.videoLinks?.watermark || "#";
-                    const mp3Link = tiksaveData.downloadLinks[3]?.link || "#";
+                    const nickname = result.author.nickname || "Tidak diketahui";
+                    const uniqueId = result.author.unique_id || "Tidak diketahui";
+                    const profile = result.author.avatar || "https://via.placeholder.com/150";
+                    const soundTitle = result.music_info.title || "Tidak ada judul musik";
+                    const nowatermark = result.play || "#";
+                    const watermark = result.wmplay || "#";
+                    const hdplay = result.hdplay || "#";
+                    const mp3Link = result.music || "#";
+
+                    const currentDate = new Date();
+                    const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+                    const formattedTime = `${String(currentDate.getHours()).padStart(2, '0')}-${String(currentDate.getMinutes()).padStart(2, '0')}-${String(currentDate.getSeconds()).padStart(2, '0')}`;
 
                     apiResultDiv.innerHTML = `
                         <h3 class="text-xl font-bold">Video Details</h3>
@@ -232,57 +257,50 @@
                                 <img src="${profile}" alt="Author Avatar" class="w-12 h-12 rounded-full border-2 border-white">
                                 <div class="ml-2">
                                     <p class="font-bold text-white">${nickname}</p>
-                                    <p class="text-sm text-white">${nama}</p>
+                                    <p class="text-sm text-white">${uniqueId}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="flex justify-between items-center mt-4">
-                                <div class="flex items-center">
-                                    <i class="fas fa-play text-gray-500 mr-1"></i>
-                                    <span>${tikwmData.penonton}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-heart text-red-500 mr-1"></i>
-                                    <span>${tikwmData.like}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-comment text-gray-500 mr-1"></i>
-                                    <span>${tikwmData.komen}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-share text-gray-500 mr-1"></i>
-                                    <span>${tikwmData.bagikan}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-bookmark text-gray-500 mr-1"></i>
-                                    <span>${tikwmData.favorit}</span>
-                                </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-play text-gray-500 mr-1"></i>
+                                <span>${result.play_count}</span>
                             </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-heart text-red-500 mr-1"></i>
+                                <span>${result.digg_count}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-comment text-gray-500 mr-1"></i>
+                                <span>${result.comment_count}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-share text-gray-500 mr-1"></i>
+                                <span>${result.share_count}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-bookmark text-gray-500 mr-1"></i>
+                                <span>${result.collect_count}</span>
+                            </div>
+                        </div>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <a href="${tiksaveData.downloadLinks[0].link}" download class="download-button">Download Video</a>
-            <a href="${tiksaveData.downloadLinks[2].link}" download class="download-button">Download Video HD</a> 
-      <a href="${watermark}" download class="download-button">Download Video WM</a>
+                            <button onclick="downloadFile('${nowatermark}', 'TikiDL_${formattedDate}_${formattedTime}.mp4')" class="download-button">Download Video</button>
+                            <button onclick="downloadFile('${hdplay}', 'TikiDL_HD_${formattedDate}_${formattedTime}.mp4')" class="download-button">Download Video HD</button>
+                            <button onclick="downloadFile('${watermark}', 'TikiDL_WM_${formattedDate}_${formattedTime}.mp4')" class="download-button">Download Video WM</button>
                         </div>
                         <div class="mt-4 flex items-center">
-          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="30px" height="30px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    
-    <title>music [#995]</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-
-</defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Dribbble-Light-Preview" transform="translate(-260.000000, -3799.000000)" fill="#000000">
-            <g id="icons" transform="translate(56.000000, 160.000000)">
-                <path d="M211.987988,3643 L221.997998,3643 L221.997998,3641 L211.987988,3641 L211.987988,3643 Z M209.985986,3639 L209.985986,3651.535 C208.984985,3651.195 208.726727,3651 207.997998,3651 C205.785786,3651 204,3652.791 204,3655 C204,3657.209 205.782783,3659 207.993994,3659 C210.205205,3659 211.987988,3657.209 211.987988,3655 L211.987988,3645 L221.997998,3645 L221.997998,3651.535 C220.996997,3651.195 220.738739,3651 220.01001,3651 C217.797798,3651 216.012012,3652.791 216.012012,3655 C216.012012,3657.209 217.794795,3659 220.006006,3659 C222.217217,3659 224,3657.209 224,3655 L224,3639 L209.985986,3639 Z" id="music-[#995]">
-
-</path>
-            </g>
-        </g>
-    </g>
-</svg>              	
+                            <svg width="30px" height="30px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <title>music [#995]</title>
+                                <desc>Created with Sketch.</desc>
+                                <defs></defs>
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="Dribbble-Light-Preview" transform="translate(-260.000000, -3799.000000)" fill="#000000">
+                                        <g id="icons" transform="translate(56.000000, 160.000000)">
+                                            <path d="M211.987988,3643 L221.997998,3643 L221.997998,3641 L211.987988,3641 L211.987988,3643 Z M209.985986,3639 L209.985986,3651.535 C208.984985,3651.195 208.726727,3651 207.997998,3651 C205.785786,3651 204,3652.791 204,3655 C204,3657.209 205.782783,3659 207.993994,3659 C210.205205,3659 211.987988,3657.209 211.987988,3655 L211.987988,3645 L221.997998,3645 L221.997998,3651.535 C220.996997,3651.195 220.738739,3651 220.01001,3651 C217.797798,3651 216.012012,3652.791 216.012012,3655 C216.012012,3657.209 217.794795,3659 220.006006,3659 C222.217217,3659 224,3657.209 224,3655 L224,3639 L209.985986,3639 Z" id="music-[#995]"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>              	
                             <p class="ml-2 font-bold">${soundTitle}</p>
                         </div>
                         <div class="mt-4">
@@ -290,11 +308,10 @@
                                 <source src="${mp3Link}" type="audio/mpeg">
                                 Your browser does not support the audio element.
                             </audio>
-                            <a href="${mp3Link}" download class="block w-full text-center download-button mt-2">Download MP3</a>
+                            <button onclick="downloadFile('${mp3Link}', 'TikiDL_${formattedDate}_${formattedTime}.mp3')" class="block w-full text-center download-button mt-2">Download MP3</button>
                         </div>
                     `;
 
-                    // Event untuk readMore dan readLess
                     document.getElementById('readMore').addEventListener('click', function (event) {
                         event.preventDefault();
                         document.getElementById('titleText').innerText = title;
@@ -319,7 +336,6 @@
                 submitButton.innerText = 'KIRIM';
             });
     }
-</script>
-
+    </script>
 </body>
 </html>
