@@ -1,0 +1,102 @@
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .link-box {
+            background-color: white;
+            border: 2px solid black;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            margin-top: 3px;
+            text-align: center;
+            width: 90%;
+        }
+        .link-box:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="flex flex-col h-screen justify-between">
+    <!-- Top Navigation Bar -->
+    <div class="bg-[#1A67A7] flex items-center justify-between p-2 fixed top-0 left-0 right-0 z-20">
+        <i id="menuButton" class="fas fa-bars text-white text-lg cursor-pointer"></i>
+        <h1 class="text-white text-base font-bold">BERANDA</h1>
+        <i id="musicButton" class="fas fa-music text-white text-lg cursor-pointer"></i>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-[#1A67A7] p-4 z-30">
+        <div class="flex justify-between items-center">
+            <div class="text-white font-bold text-lg">Menu</div>
+            <i id="closeButton" class="fas fa-times text-white text-lg cursor-pointer"></i>
+        </div>
+        <ul class="text-white mt-4">
+            <li class="py-2"><a href="tiktokd.html">TikTok downloader</a></li>
+            <li class="py-2"><a href="index2.html">YouTube downloader</a></li>
+            <li class="py-2"><a href="index3.html">Instagram downloader</a></li>
+            <li class="py-2"><a href="spotify.html">Spotify downloader</a></li>
+            <li class="py-2"><a href="index4.html">applemusic downloader</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-grow bg-white mt-16 mb-12 flex flex-col items-center justify-start">
+        <div class="link-box" onclick="window.location.href='https://youtube.com/@craft7yt332?si=gSqbyAxDNmLlFDH9'">
+            YouTube
+        </div>
+        <div class="link-box" onclick="window.location.href='https://chat.whatsapp.com/FZtfxpSyYCN9FyCjWekyZN'">
+            Grup WhatsApp
+        </div>
+        <div class="link-box" onclick="window.location.href='https://craft7web.vercel.app'">
+            Website
+        </div>
+        <div class="link-box" onclick="window.location.href='https://www.instagram.com/qhairulpratama/profilecard/?igsh=MWVlZG9tMHA3dWQ4eg=='">
+            Instagram
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bg-[#1A67A7] flex justify-around p-2 fixed bottom-0 left-0 right-0 z-10">
+        <a href="index.html"><i class="fas fa-home text-white text-xl cursor-pointer"></i></a>
+        <a href="halaman2.html"><i class="fas fa-file-alt text-white text-xl cursor-pointer"></i></a>
+        <a href="link.html"><i class="fas fa-link text-yellow-500 text-xl cursor-pointer"></i></a>
+    </div>
+
+    <audio id="audioPlayer" src="https://filezone-cdn.caliph.dev/file/7bd213a491b3e8e22432.mp3" preload="auto"></audio>
+
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const closeButton = document.getElementById('closeButton');
+        const sidebar = document.getElementById('sidebar');
+        const musicButton = document.getElementById('musicButton');
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        closeButton.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+
+        musicButton.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            } else {
+                audioPlayer.pause();
+            }
+        });
+    </script>
+</body>
+</html>
