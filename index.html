@@ -224,8 +224,27 @@
                         <center><button class="btn-fetch" onclick="fetchTikTok()">FETCH DATA</button></center>
                         <pre id="tiktok-output" class="hasilnya">Masukkan URL TikTok, lalu klik tombol.</pre>
                     </div>
+                
+            </div>
+       <!--tiktok download v2 -->
+       	<div class="api-section">
+                    <div class="api-title" onclick="toggleResponse('tiktok-response2')">
+                        <h4>3. TikTok Downloader v2</h4>
+                        <span id="tiktok-arrow">
+                            <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z" fill="#000000"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div id="tiktok-response2" class="api-response">
+                        <label for="tiktok-urll" class="form-label">Masukkan URL TikTok:</label>
+                        <center><input type="text" id="tiktok-urll" class="inputnya" placeholder="https://vt.tiktok.com/..." /></center>
+                        <center><button class="btn-fetch" onclick="fetchTikTokt()">FETCH DATA</button></center>
+                        <pre id="tiktok-outputt" class="hasilnya">Masukkan URL TikTok, lalu klik tombol.</pre>
+                    </div>
                 </div>
             </div>
+       
        
     </div>
     <!-- Bottom Navigation Bar -->
@@ -364,6 +383,28 @@
 
             output.textContent = 'Loading...';
             const apiUrl =`https://rullz-api.vercel.app/tiktok/download?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent =`${apiUrl}\n\n ${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    output.textContent = `Error: ${error.message}`;
+                });
+        }
+        
+                // Fetch data from TikTok Downloader v2 API
+        function fetchTikTokt() {
+            const url = document.getElementById('tiktok-urll').value;
+            const output = document.getElementById('tiktok-outputt');
+
+            if (!url) {
+                output.textContent = 'URL TikTok wajib diisi!';
+                return;
+            }
+
+            output.textContent = 'Loading...';
+            const apiUrl =`https://rullz-api.vercel.app/tmate/download?url=${encodeURIComponent(url)}`;
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
