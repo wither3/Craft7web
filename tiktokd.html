@@ -1,341 +1,296 @@
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>qTikSave</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>tikDL</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
         }
-        .paste-button {
-            background-color: #f3f4f6;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            padding: 0.5rem;
+        .menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .menu-open {
+            transform: translateX(0);
+        }
+        .input-container {
+            position: relative;
+        }
+        .paste-icon {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
             cursor: pointer;
-            transition: background-color 0.3s;
         }
-        .paste-button:hover {
-            background-color: #e5e7eb;
-        }
-        .submit-button {
-            background-color: #1976D2;
-            color: white;
-            font-weight: bold;
-            padding: 0.75rem;
-            border-radius: 0.375rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .submit-button:hover {
-            background-color: #1565C0;
-            transform: scale(1.05);
-        }
-        .submit-button:active {
-            background-color: #10b981;
-        }
-        .navbar {
-            position: fixed;
-            top: 0;
+        #download-mp3-link { 
+            font-size: 15px; /* Ubah ukuran teks tombol */ 
+            padding: 9px 25px; /* Ubah ukuran padding tombol */ 
+            margin: 5px; /* Ubah margin tombol */ 
             width: 100%;
+            height: 30px;
             background-color: white;
-            z-index: 1000;
-        }
-        .download-button {
-            background-color: white;
-            color: black;
             border: 1px solid black;
-            padding: 0.5rem;
-            border-radius: 0.375rem;
+            border-radius: 5px;
+            display: block;
             text-align: center;
-            flex: 1;
-            transition: background-color 0.3s;
-        }
-        .download-button:hover {
-            background-color: #f3f4f6;
-        }
-        .footer {
-            background-color: #f3f4f6;
-            padding: 2rem;
-            margin-top: 2rem;
-            width: 100%;
-        }
-        .footer h3 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        .footer a {
-            color: #1976D2;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .footer a:hover {
-            color: #1565C0;
+            line-height: 30px; /* Vertically center the text */
         }
         audio {
             display: block;
             width: 100%;
             height: 30px;
-            border: 1px solid black;
+            border: 1px solid #d1d5db; /* Tailwind's gray-300 */
             border-radius: 5px;
-            background-color: #f3f3f3;
+            background-color: white;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .rainbow-text {
-            animation: rainbow 3s infinite;
-        }
-        @keyframes rainbow {
-            0% { color: rgb(0, 0, 255); }
-            33% { color: rgb(128, 0, 128); }
-            66% { color: rgb(255, 255, 0); }
-            100% { color: rgb(0, 0, 255); }
         }
     </style>
 </head>
-<body class="bg-white text-gray-800">
-    <div class="navbar border-b border-black p-2">
-        <div class="flex items-center justify-between max-w-7xl mx-auto">
-            <h1 class="text-4xl font-bold ml-2 rainbow-text"><p class="font-serif">TikiDL</p></h1>
-            <i class="fas fa-bars text-xl ml-2 mr-2"></i>
-        </div>
+<body class="bg-gray-100 text-gray-900">
+<header class="bg-blue-600 text-white p-2 fixed w-full top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+        <button class="text-2xl" id="menu-button">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="text-xl font-bold mx-auto">tikDL</h1>
     </div>
-    <div class="flex flex-col items-center justify-center min-h-screen p-4 pt-20">
-        <p class="mt-4 text-center text-gray-600">TikiDL adalah situs web Pengunduh TikTok yang cepat dan bebas iklan, Masukkan Tautan Anda Di Bawah.</p>
-        <div class="mt-6 w-full max-w-md">
-            <div class="relative">
-                <input id="urlInput" type="text" placeholder="Input URL..." class="w-full p-3 border border-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button onclick="pasteClipboard()" class="paste-button absolute right-3 top-2.5">
-                    <i class="fas fa-clipboard text-gray-500"></i>
-                </button>
-            </div>
-            <button id="submitButton" class="mt-3 w-full submit-button" onclick="sendLink()">KIRIM</button>
-        </div>
-        <div id="apiResult" class="mt-4 w-full max-w-md p-4 border border-gray-200 rounded-md shadow-md"></div>
-        <div class="mt-16 text-center">
-            <h2 style="font-family: Copperplate, 'Copperplate Gothic Light', fantasy; font-size: 24px; font-weight: 700; line-height: 26.4px;">
-                Why should you use <span style="color: #f06;">Tiki<span style="color: #f06;">DL</span></span>
-            </h2>       
-        </div>
-        <div class="mt-8 w-full max-w-md">
-            <div class="p-4 border border-gray-200 rounded-md shadow-md">
-                <center>
-                    <p class="text-2xl"></p>
-                    <p class="mt-2 text-xl font-bold">CEPAT</p>
-                </center>
-            </div>
-        </div>
-        <div class="mt-8 w-full max-w-md">
-            <div class="p-4 border border-gray-200 rounded-md shadow-md">
-                <center>
-                    <p class="text-2xl"></p>
-                    <p class="mt-2 text-xl font-bold">AMAN</p>
-                </center>
-            </div>
-        </div>
-        <div class="mt-8 w-full max-w-md">
-            <div class="p-4 border border-gray-200 rounded-md shadow-md">
-                <center>
-                    <p class="text-2xl"></p>
-                    <p class="mt-2 text-xl font-bold">TANPA IKLAN</p>
-                </center>
-            </div>
-        </div>
-        <div class="mt-16 w-full max-w-2xl">
-            <h2 class="text-3xl font-bold text-center mb-4">Cara Menggunakan web TikiDL</h2>
-            <div class="bg-gray-100 p-6 rounded-md shadow-md">
-                <ol class="list-decimal list-inside space-y-4">
-                    <li>
-                        <p class="font-bold">Salin Tautan Video TikTok</p>
-                        <p class="text-gray-600">Buka aplikasi TikTok dan salin tautan video yang ingin Anda unduh.</p>
-                    </li>
-                    <li>
-                        <p class="font-bold">Tempel Tautan di qTikSave</p>
-                        <p class="text-gray-600">Tempel tautan video TikTok yang telah Anda salin ke dalam kotak input di atas.</p>
-                    </li>
-                    <li>
-                        <p class="font-bold">Klik Tombol "KIRIM"</p>
-                        <p class="text-gray-600">Klik tombol "KIRIM" untuk memproses tautan video TikTok Anda.</p>
-                    </li>
-                    <li>
-                        <p class="font-bold">Unduh Video</p>
-                        <p class="text-gray-600">Setelah video diproses, Anda akan melihat beberapa opsi unduhan. Pilih format yang Anda inginkan dan klik tombol unduh. Setelah itu tekan lama video untuk mengunduh video</p>
-                    </li>
-                </ol>
-            </div>
-        </div>
-        <div class="footer mt-16">
-            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3>Fitur Lainnya</h3>
-                    <a href="index4.html">Apple music downloader</a><br>
-                    <a href="spotify.html">Spotify downloader</a>
-                </div>
-                <div>
-                    <h3>Legality</h3>
-                    <a href="#">Terms Of Service</a><br>
-                    <a href="#">Privacy Policy</a>
-                </div>
-                <div>
-                    <h3>Community</h3>
-                    <a href="https://chat.whatsapp.com/IEzFm5hQz2fIwpI6NNDTvN">WhatsApp group</a><br>
-                </div>
-            </div>
-            <div class="text-center mt-8">
-                <p>© TikiDL 2024</p>
-            </div>
-        </div>
+</header>
+<div class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" id="overlay"></div>
+<aside class="fixed inset-y-0 left-0 bg-white w-64 p-4 shadow-lg z-50 menu" id="sidebar">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">MENU</h2>
+        <button class="text-2xl" id="close-button">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
-    <script>
-    function pasteClipboard() {
-        navigator.clipboard.readText()
-            .then(text => {
-                document.getElementById('urlInput').value = text;
-            })
-            .catch(err => {
-                console.error('Failed to read clipboard contents: ', err);
-            });
-    }
+    <nav>
+        <ul class="space-y-4">
+            <li><a class="text-gray-900 hover:text-blue-600" href="#">Home</a></li>
+            <li><a class="text-gray-900 hover:text-blue-600" href="#">Features</a></li>
+            <li><a class="text-gray-900 hover:text-blue-600" href="#">Contact</a></li>
+        </ul>
+    </nav>
+</aside>
+<main class="container mx-auto p-4 mt-16">
+    <section class="text-center my-8">
+        <h2 class="text-3xl font-bold mb-4">Download TikTok Videos Easily</h2>
+        <p class="text-lg mb-6">Paste the TikTok video link below to download your favorite videos.</p>
+        <div class="flex justify-center">
+            <div class="input-container w-full max-w-lg">
+                <input id="video-url" class="w-full p-2 border border-gray-300 rounded-l-md" placeholder="Paste TikTok video link here" type="text"/>
+                <i class="fas fa-paste paste-icon text-gray-600" id="paste-icon"></i>
+            </div>
+            <button id="download-button" class="bg-blue-600 text-white p-2 rounded-r-md hover:bg-blue-700">Download</button>
+        </div>
+    </section>
+    <section id="result-section" class="my-8 hidden">
+        <h3 class="text-2xl font-bold mb-4">Download Result</h3>
+        <div class="bg-white p-4 rounded-lg shadow-md inline-block">
+            <div class="flex items-center mb-4">
+                <img id="author-avatar" alt="Author avatar" class="w-12 h-12 rounded-full mr-4"/>
+                <div>
+                    <h4 id="video-name" class="text-xl font-semibold"></h4>
+                    <p id="video-author" class="text-gray-600"></p>
+                </div>
+            </div>
+            <video id="video-player" class="w-full h-auto object-cover rounded-md mb-4" controls></video>
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-eye text-gray-600"></i>
+                    <span id="video-views" class="text-gray-600"></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-heart text-red-600"></i>
+                    <span id="video-likes" class="text-gray-600"></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-comment text-gray-600"></i>
+                    <span id="video-comments" class="text-gray-600"></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-star text-yellow-500"></i>
+                    <span id="video-favorites" class="text-gray-600"></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-share text-gray-600"></i>
+                    <span id="video-shares" class="text-gray-600"></span>
+                </div>
+            </div>
+            <div class="flex justify-between items-center space-x-3 mb-4">
+                <button id="download-video" class="bg-white text-black p-2 rounded-md border border-black hover:bg-gray-200">Download Video</button>
+                <button id="download-hd-video" class="bg-white text-black p-2 rounded-md border border-black hover:bg-gray-200">Download Video HD</button>
+                <button id="download-wm-video" class="bg-white text-black p-2 rounded-md border border-black hover:bg-gray-200">Download Video WM</button>
+            </div>
+            <div class="flex items-center mb-4">
+                <i class="fas fa-music text-gray-600 text-2xl mr-4"></i>
+                <div>
+                    <p id="music-title" class="text-lg font-semibold"></p>
+                    <p id="music-author" class="text-gray-600"></p>
+                </div>
+            </div>
+            <audio id="music-player" class="w-full mb-4 custom-audio" controls></audio>
+            <button id="download-mp3" class="bg-white text-black p-2 rounded-md border border-black hover:bg-gray-200 w-full">Download MP3</button>
+        </div>
+    </section>
+    <section class="my-8">
+        <h3 class="text-2xl font-bold mb-4">How It Works</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <img alt="Step 1: Copy the TikTok video link" class="w-full h-48 object-cover rounded-md mb-4" height="200" src="./gambar/step1.jpg" width="300"/>
+                <h4 class="text-xl font-semibold mb-2">Step 1</h4>
+                <p>Copy the link of the TikTok video you want to download.</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <img alt="Step 2: Paste the link in the input field" class="w-full h-48 object-cover rounded-md mb-4" height="200" src="./gambar/step2.jpg" width="300"/>
+                <h4 class="text-xl font-semibold mb-2">Step 2</h4>
+                <p>Paste the copied link into the input field above.</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <img alt="Step 3: Click the download button" class="w-full h-48 object-cover rounded-md mb-4" height="200" src="./gambar/step3.jpg" width="300"/>
+                <h4 class="text-xl font-semibold mb-2">Step 3</h4>
+                <p>Click the download button to save the video to your device.</p>
+            </div>
+        </div>
+    </section>
+    <section class="my-8">
+        <h3 class="text-2xl font-bold mb-4">Features</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <i class="fas fa-download text-blue-600 text-4xl mb-4"></i>
+                <h4 class="text-xl font-semibold mb-2">High Quality</h4>
+                <p>Download videos in the highest quality available.</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <i class="fas fa-lock text-blue-600 text-4xl mb-4"></i>
+                <h4 class="text-xl font-semibold mb-2">Secure</h4>
+                <p>Your downloads are safe and secure with us.</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <i class="fas fa-bolt text-blue-600 text-4xl mb-4"></i>
+                <h4 class="text-xl font-semibold mb-2">Fast</h4>
+                <p>Experience lightning-fast download speeds.</p>
+            </div>
+        </div>
+    </section>
+</main>
+<footer class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto text-center">
+        <p>ï¿½ 2023 tikDL. All rights reserved.</p>
+    </div>
+</footer>
+<script>
+    const menuButton = document.getElementById('menu-button');
+    const closeButton = document.getElementById('close-button');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const downloadButton = document.getElementById('download-button');
+    const videoUrlInput = document.getElementById('video-url');
+    const pasteIcon = document.getElementById('paste-icon');
+    const resultSection = document.getElementById('result-section');
+    const videoPlayer = document.getElementById('video-player');
+    const videoAuthor = document.getElementById('video-author');
+    const videoName = document.getElementById('video-name');
+    const downloadVideoButton = document.getElementById('download-video');
+    const downloadHdVideoButton = document.getElementById('download-hd-video');
+    const downloadWmVideoButton = document.getElementById('download-wm-video');
+    const downloadMp3Button = document.getElementById('download-mp3');
+    const authorAvatar = document.getElementById('author-avatar');
+    const videoViews = document.getElementById('video-views');
+    const videoLikes = document.getElementById('video-likes');
+    const videoComments = document.getElementById('video-comments');
+    const videoFavorites = document.getElementById('video-favorites');
+    const videoShares = document.getElementById('video-shares');
+    const musicTitle = document.getElementById('music-title');
+    const musicAuthor = document.getElementById('music-author');
+    const musicPlayer = document.getElementById('music-player');
 
-    function downloadFile(url, fileName) {
-        fetch(url)
-            .then(response => response.blob())
-            .then(blob => {
-                const objectURL = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = objectURL;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(objectURL);
-            })
-            .catch(error => console.error('Error downloading the file:', error));
-    }
+    menuButton.addEventListener('click', () => {
+        sidebar.classList.toggle('menu-open');
+        overlay.classList.toggle('hidden');
+    });
 
-    function sendLink() {
-        const url = document.getElementById('urlInput').value;
-        const apiUrl = `https://api.tiklydown.eu.org/api/download/v5?url=${encodeURIComponent(url)}`;
-        const submitButton = document.getElementById('submitButton');
-        submitButton.innerText = 'Loading...';
+    closeButton.addEventListener('click', () => {
+        sidebar.classList.remove('menu-open');
+        overlay.classList.add('hidden');
+    });
 
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 200) {
-                    const result = data.result;
+    overlay.addEventListener('click', () => {
+        sidebar.classList.remove('menu-open');
+        overlay.classList.add('hidden');
+    });
 
-                    const apiResultDiv = document.getElementById('apiResult');
-                    const title = result.title || "Tidak ada judul";
-                    const shortTitle = title.length > 50 ? title.substring(0, 50) + '...' : title;
+    pasteIcon.addEventListener('click', async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            videoUrlInput.value = text;
+        } catch (err) {
+            console.error('Failed to read clipboard contents: ', err);
+        }
+    });
 
-                    const nickname = result.author.nickname || "Tidak diketahui";
-                    const uniqueId = result.author.unique_id || "Tidak diketahui";
-                    const profile = result.author.avatar || "https://via.placeholder.com/150";
-                    const soundTitle = result.music_info.title || "Tidak ada judul musik";
-                    const nowatermark = result.play || "#";
-                    const watermark = result.wmplay || "#";
-                    const hdplay = result.hdplay || "#";
-                    const mp3Link = result.music || "#";
+    const downloadFile = async (url, fileName) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const objectURL = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectURL;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectURL);
+    };
 
-                    const currentDate = new Date();
-                    const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
-                    const formattedTime = `${String(currentDate.getHours()).padStart(2, '0')}-${String(currentDate.getMinutes()).padStart(2, '0')}-${String(currentDate.getSeconds()).padStart(2, '0')}`;
+    downloadButton.addEventListener('click', async () => {
+        const videoUrl = videoUrlInput.value;
+        if (!videoUrl) {
+            alert('Please enter a TikTok video URL');
+            return;
+        }
 
-                    apiResultDiv.innerHTML = `
-                        <h3 class="text-xl font-bold">Video Details</h3>
-                        <p><strong>Title:</strong> <span id="titleText">${shortTitle}</span> <a href="#" id="readMore" class="text-blue-500">baca selengkapnya...</a><a href="#" id="readLess" class="text-blue-500" style="display:none;">baca sedikit...</a></p>
-                        <div class="relative">
-                            <video controls class="mt-2 w-full rounded-md">
-                                <source src="${nowatermark}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <div class="absolute top-2 left-2 flex items-center">
-                                <img src="${profile}" alt="Author Avatar" class="w-12 h-12 rounded-full border-2 border-white">
-                                <div class="ml-2">
-                                    <p class="font-bold text-white">${nickname}</p>
-                                    <p class="text-sm text-white">${uniqueId}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center mt-4">
-                            <div class="flex items-center">
-                                <i class="fas fa-play text-gray-500 mr-1"></i>
-                                <span>${result.play_count}</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-heart text-red-500 mr-1"></i>
-                                <span>${result.digg_count}</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-comment text-gray-500 mr-1"></i>
-                                <span>${result.comment_count}</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-share text-gray-500 mr-1"></i>
-                                <span>${result.share_count}</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-bookmark text-gray-500 mr-1"></i>
-                                <span>${result.collect_count}</span>
-                            </div>
-                        </div>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <button onclick="downloadFile('${nowatermark}', 'TikiDL_${formattedDate}_${formattedTime}.mp4')" class="download-button">Download Video</button>
-                            <button onclick="downloadFile('${hdplay}', 'TikiDL_HD_${formattedDate}_${formattedTime}.mp4')" class="download-button">Download Video HD</button>
-                            <button onclick="downloadFile('${watermark}', 'TikiDL_WM_${formattedDate}_${formattedTime}.mp4')" class="download-button">Download Video WM</button>
-                        </div>
-                        <div class="mt-4 flex items-center">
-                            <svg width="30px" height="30px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <title>music [#995]</title>
-                                <desc>Created with Sketch.</desc>
-                                <defs></defs>
-                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="Dribbble-Light-Preview" transform="translate(-260.000000, -3799.000000)" fill="#000000">
-                                        <g id="icons" transform="translate(56.000000, 160.000000)">
-                                            <path d="M211.987988,3643 L221.997998,3643 L221.997998,3641 L211.987988,3641 L211.987988,3643 Z M209.985986,3639 L209.985986,3651.535 C208.984985,3651.195 208.726727,3651 207.997998,3651 C205.785786,3651 204,3652.791 204,3655 C204,3657.209 205.782783,3659 207.993994,3659 C210.205205,3659 211.987988,3657.209 211.987988,3655 L211.987988,3645 L221.997998,3645 L221.997998,3651.535 C220.996997,3651.195 220.738739,3651 220.01001,3651 C217.797798,3651 216.012012,3652.791 216.012012,3655 C216.012012,3657.209 217.794795,3659 220.006006,3659 C222.217217,3659 224,3657.209 224,3655 L224,3639 L209.985986,3639 Z" id="music-[#995]"></path>
-                                        </g>
-                                    </g>
-                                </g>
-                            </svg>              	
-                            <p class="ml-2 font-bold">${soundTitle}</p>
-                        </div>
-                        <div class="mt-4">
-                            <audio controls class="w-full">
-                                <source src="${mp3Link}" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
-                            <button onclick="downloadFile('${mp3Link}', 'TikiDL_${formattedDate}_${formattedTime}.mp3')" class="block w-full text-center download-button mt-2">Download MP3</button>
-                        </div>
-                    `;
+        try {
+            const response = await fetch(`https://rullz-api.vercel.app/tikwm/download?url=${encodeURIComponent(videoUrl)}`);
+            const data = await response.json();
 
-                    document.getElementById('readMore').addEventListener('click', function (event) {
-                        event.preventDefault();
-                        document.getElementById('titleText').innerText = title;
-                        this.style.display = 'none';
-                        document.getElementById('readLess').style.display = 'inline';
-                    });
+            if (data.success) {
+                videoPlayer.src = data.data.video.noWatermark;
+                videoPlayer.style.width = '100%';
+                videoPlayer.style.height = 'auto';
+                videoAuthor.textContent = data.data.author;
+                videoName.textContent = data.data.name || 'No name';
+                authorAvatar.src = data.data.avatar;
+                videoViews.textContent = data.data.videoInfo.view;
+                videoLikes.textContent = data.data.videoInfo.like;
+                videoComments.textContent = data.data.videoInfo.comment;
+                videoFavorites.textContent = data.data.videoInfo.collect;
+                videoShares.textContent = data.data.videoInfo.share;
+                musicTitle.textContent = data.data.musicInfo.title;
+                musicAuthor.textContent = data.data.musicInfo.author;
+                musicPlayer.src = data.data.musicInfo.play;
 
-                    document.getElementById('readLess').addEventListener('click', function (event) {
-                        event.preventDefault();
-                        document.getElementById('titleText').innerText = shortTitle;
-                        this.style.display = 'none';
-                        document.getElementById('readMore').style.display = 'inline';
-                    });
+                const currentDate = new Date();
+                const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+                const formattedTime = `${String(currentDate.getHours()).padStart(2, '0')}-${String(currentDate.getMinutes()).padStart(2, '0')}-${String(currentDate.getSeconds()).padStart(2, '0')}`;
 
-                } else {
-                    document.getElementById('apiResult').innerText = `Error: ${data.message}`;
-                }
-                submitButton.innerText = 'KIRIM';
-            })
-            .catch(error => {
-                document.getElementById('apiResult').innerText = `Error: ${error.message}`;
-                submitButton.innerText = 'KIRIM';
-            });
-    }
-    </script>
+                downloadVideoButton.onclick = () => downloadFile(data.data.video.noWatermark, `TikDL_${formattedDate}_${formattedTime}.mp4`);
+                downloadHdVideoButton.onclick = () => downloadFile(data.data.video.videoHd, `TikDL_HD_${formattedDate}_${formattedTime}.mp4`);
+                downloadWmVideoButton.onclick = () => downloadFile(data.data.video.watermark, `TikDL_WM_${formattedDate}_${formattedTime}.mp4`);
+                downloadMp3Button.onclick = () => downloadFile(data.data.musicInfo.play, `TikDL_${formattedDate}_${formattedTime}.mp3`);
+
+                resultSection.classList.remove('hidden');
+            } else {
+                alert('Failed to download video');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while downloading the video');
+        }
+    });
+</script>
 </body>
 </html>
