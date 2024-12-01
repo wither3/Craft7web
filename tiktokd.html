@@ -49,6 +49,43 @@
             background-color: white;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        .loading-overlay.active {
+            display: flex;
+        }
+        .loading-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e5e7eb; /* Tailwind's gray-200 */
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background: #3b82f6; /* Tailwind's blue-500 */
+            width: 0;
+            transition: width 0.2s;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900">
@@ -57,7 +94,7 @@
         <button class="text-2xl" id="menu-button">
             <i class="fas fa-bars"></i>
         </button>
-        <h1 class="text-xl font-bold mx-auto">tikDL</h1>
+        <h1 class="text-xl font-bold mx-auto">TikDL</h1>
     </div>
 </header>
 <div class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" id="overlay"></div>
@@ -180,9 +217,17 @@
 </main>
 <footer class="bg-blue-600 text-white p-4">
     <div class="container mx-auto text-center">
-        <p>� 2023 tikDL. All rights reserved.</p>
+        <p>© 2024 TikDL. All rights reserved.</p>
     </div>
 </footer>
+<div class="loading-overlay" id="loading-overlay">
+    <div class="loading-box">
+        <div class="text-gray-900 text-2xl">Loading...</div>
+        <div class="progress-bar">
+            <div class="progress-bar-inner" id="progress-bar-inner"></div>
+        </div>
+    </div>
+</div>
 <script>
     const menuButton = document.getElementById('menu-button');
     const closeButton = document.getElementById('close-button');
@@ -208,6 +253,8 @@
     const musicTitle = document.getElementById('music-title');
     const musicAuthor = document.getElementById('music-author');
     const musicPlayer = document.getElementById('music-player');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const progressBarInner = document.getElementById('progress-bar-inner');
 
     menuButton.addEventListener('click', () => {
         sidebar.classList.toggle('menu-open');
@@ -234,8 +281,20 @@
     });
 
     const downloadFile = async (url, fileName) => {
+        loadingOverlay.classList.add('active');
         const response = await fetch(url);
-        const blob = await response.blob();
+        const reader = response.body.getReader();
+        const contentLength = +response.headers.get('Content-Length');
+        let receivedLength = 0;
+        const chunks = [];
+        while(true) {
+            const {done, value} = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            receivedLength += value.length;
+            progressBarInner.style.width = `${(receivedLength / contentLength) * 100}%`;
+        }
+        const blob = new Blob(chunks);
         const objectURL = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = objectURL;
@@ -244,6 +303,7 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(objectURL);
+        loadingOverlay.classList.remove('active');
     };
 
     downloadButton.addEventListener('click', async () => {
