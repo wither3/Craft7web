@@ -45,10 +45,10 @@
             display: none;
         }
         .api-section {
-            border: 1px solid #ccc;
-            border-radius: 3px;
+            border: 1px solid green;
+            border-radius: 0px;
             margin: 10px 5px; /* Jarak atas dan bawah */
-            padding: 0; /* Padding diatur ke 0 */
+            
             transition: box-shadow 0.3s;
         }
         .api-section:hover {
@@ -59,9 +59,9 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            padding: 7px;
+            padding: 0px;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 0px;
         }
         .api-title h4 {
             margin: 0;
@@ -103,7 +103,9 @@
             color: #000;
         }
         .hasilnya {
-            margin: 7px 5px;
+            margin: 5px 5px;
+            border:1px solid black;
+           border-radius:0px;
         }
         .inputnya {
             height: 40px; /* Tinggi input */
@@ -125,6 +127,20 @@
             margin-bottom: 3px;
             height: 30px;
         }
+        .gett {
+        background-color:green;
+       height:37px;
+       
+        }
+        .kotakget {
+        	margin:5px;
+        }
+        .teksnya {
+       margin:5px;
+        }
+       h4 {
+       margin: 10px 10px;
+       }
     </style>
 </head>
 <body class="flex flex-col h-screen justify-between bg-gray-100">
@@ -156,17 +172,20 @@
         
         <!-- API Test UI -->
         <p class="font-serif">BERIKUT ADALAH REST API GRATIS</p>
-        <p class="font-light">Rekomendasi untuk bot WhatsApp</p>
+        <p class="font-light">bisa untuk bot WhatsApp</p>
 
-        <div class="bg-white p-4 rounded-lg shadow-lg mt-4">
-                 <div class="api-section">
+                         <div class="api-section">
                     <div class="api-title" onclick="toggleResponse('gempa-response')">
-                        <h4>1. BMKG Gempa </h4>
+          <div class="gett"><div class="kotakget"><font color="white">GET</font></div></div>
+                           
+	<div class="teksnya">
+                     <h4>1. BMKG Gempa 🔥 </h4></div>
                         <span id="gempa-arrow">
                             <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z" fill="#000000"></path>
                             </svg>
                         </span>
+                        
                     </div>
                     <div id="gempa-response" class="api-response">
                         <center><button class="btn-fetch" onclick="fetchGempa()">Fetch Data Gempa</button></center>
@@ -177,7 +196,9 @@
                 <!-- Section YouTube Downloader API -->
                 <div class="api-section">
                     <div class="api-title" onclick="toggleResponse('youtube-response')">
-                        <h4>2. YouTube Downloader API</h4>
+                    <div class="gett"><div class="kotakget"><font color="white">GET</font></div></div>
+                     <div class="teksnya">
+                        <h4>2. YouTube Downloader 🔥</h4></div>
                         <span id="youtube-arrow">
                             <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z" fill="#000000"></path>
@@ -211,7 +232,9 @@
                 <!-- Section TikTok Downloader API -->
                 <div class="api-section">
                     <div class="api-title" onclick="toggleResponse('tiktok-response')">
-                        <h4>3. TikTok Downloader</h4>
+          <div class="gett"><div class="kotakget"><font color="white">GET</font></div></div>
+                        
+       <div class="teksnya"><h4>3. TikTok Downloader 🔥</h4></div>
                         <span id="tiktok-arrow">
                             <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z" fill="#000000"></path>
@@ -228,25 +251,87 @@
             </div>
        <!--tiktok download v2 -->
        	<div class="api-section">
-                    <div class="api-title" onclick="toggleResponse('tiktok-response2')">
-                        <h4>3. TikTok Downloader v2</h4>
+                    <div class="api-title" onclick="toggleResponse('tiktok-responsev')">
+                <div class="gett"><div class="kotakget"><font color="white">GET</font></div></div>
+                 
+        <div class="teksnya"><h4>4. TikTok Downloader v2 🔥</h4></div>
                         <span id="tiktok-arrow">
                             <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z" fill="#000000"></path>
                             </svg>
                         </span>
                     </div>
-                    <div id="tiktok-response2" class="api-response">
+                    <div id="tiktok-responsev" class="api-response">
                         <label for="tiktok-urll" class="form-label">Masukkan URL TikTok:</label>
                         <center><input type="text" id="tiktok-urll" class="inputnya" placeholder="https://vt.tiktok.com/..." /></center>
                         <center><button class="btn-fetch" onclick="fetchTikTokt()">FETCH DATA</button></center>
                         <pre id="tiktok-outputt" class="hasilnya">Masukkan URL TikTok, lalu klik tombol.</pre>
                     </div>
                 </div>
-            </div>
+          
+       <!-- tikwm tiktok downloader -->
+      <div class="api-section">
+                    <div class="api-title" onclick="toggleResponse('tiktok-response3')">
+                <div class="gett"><div class="kotakget"><font color="white">GET</font></div></div>
+                 
+        <div class="teksnya"><h4>5. TikWM tiktok downloader 🔥</h4></div>
+                        <span id="tiktok-arrow">
+                            <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z" fill="#000000"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div id="tiktok-response3" class="api-response">
+                        <label for="tikwm-url" class="form-label">Masukkan URL TikTok:</label>
+                        <center><input type="text" id="tikwm-url" class="inputnya" placeholder="https://vt.tiktok.com/..." /></center>
+                        <center><button class="btn-fetch" onclick="fetchTikWM()">FETCH DATA</button></center>
+                        <pre id="tikwm-output" class="hasilnya">Masukkan URL TikTok, lalu klik tombol.</pre>
+                    </div>
+                </div>
+           
+       <!-- ssstik tiktok downloader -->
+             <div class="api-section">
+                    <div class="api-title" onclick="toggleResponse('tiktok-response4')">
+                <div class="gett"><div class="kotakget"><font color="white">GET</font></div></div>
+                 
+        <div class="teksnya"><h4>6. ssstik tiktok downloader 🔥</h4></div>
+                        <span id="tiktok-arrow">
+                            <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z" fill="#000000"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div id="tiktok-response4" class="api-response">
+                        <label for="ssstik-url" class="form-label">Masukkan URL TikTok:</label>
+                        <center><input type="text" id="ssstik-url" class="inputnya" placeholder="https://vt.tiktok.com/..." /></center>
+                        <center><button class="btn-fetch" onclick="fetchssstik()">FETCH DATA</button></center>
+                        <pre id="ssstik-output" class="hasilnya">Masukkan URL TikTok, lalu klik tombol.</pre>
+                    </div>
+                </div>
+            
+       <!-- musicaldown tiktok downloader -->
+      <div class="api-section">
+                    <div class="api-title" onclick="toggleResponse('msdown-response')">
+          <div class="gett"><div class="kotakget"><font color="white">GET</font></div></div>
+                        
+       <div class="teksnya"><h4>7.msdown TikTok DL 🔥</h4></div>
+                        <span id="tiktok-arrow">
+                            <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z" fill="#000000"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div id="msdown-response" class="api-response">
+                        <label for="MSdown-url" class="form-label">Masukkan URL TikTok:</label>
+                        <center><input type="text" id="MSdown-url" class="inputnya" placeholder="https://vt.tiktok.com/..." /></center>
+                        <center><button class="btn-fetch" onclick="fetchmus()">FETCH DATA</button></center>
+                        <pre id="MSdown-output" class="hasilnya">Masukkan URL TikTok, lalu klik tombol.</pre>
+                    </div>
+                
+            </div> 	
+       <!-- apel musik downloader -->
        
-       
-    </div>
+    
     <!-- Bottom Navigation Bar -->
     <div class="bg-[#1A67A7] flex justify-around p-2 fixed bottom-0 left-0 right-0 z-10">
         <a href="index.html"><i class="fas fa-home text-yellow-500 text-xl cursor-pointer"></i></a>
@@ -397,6 +482,92 @@
         function fetchTikTokt() {
             const url = document.getElementById('tiktok-urll').value;
             const output = document.getElementById('tiktok-outputt');
+
+            if (!url) {
+                output.textContent = 'URL TikTok wajib diisi!';
+                return;
+            }
+
+            output.textContent = 'Loading...';
+            const apiUrl =`https://rullz-api.vercel.app/tmate/download?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent =`${apiUrl}\n\n ${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    output.textContent = `Error: ${error.message}`;
+                });
+        }
+                     // Fetch data from Tikwm api
+        function fetchTikWM() {
+            const url = document.getElementById('tikwm-url').value;
+            const output = document.getElementById('tikwm-output');
+
+            if (!url) {
+                output.textContent = 'URL TikTok wajib diisi!';
+                return;
+            }
+
+            output.textContent = 'Loading...';
+            const apiUrl =`https://rullz-api.vercel.app/tikwm/download?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent =`${apiUrl}\n\n ${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    output.textContent = `Error: ${error.message}`;
+                });
+        }
+                   // Fetch data from TikTok Downloader ssstik API
+        function fetchssstik() {
+            const url = document.getElementById('ssstik-url').value;
+            const output = document.getElementById('ssstik-output');
+
+            if (!url) {
+                output.textContent = 'URL TikTok wajib diisi!';
+                return;
+            }
+
+            output.textContent = 'Loading...';
+            const apiUrl =`https://rullz-api.vercel.app/ssstik/download?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent =`${apiUrl}\n\n ${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    output.textContent = `Error: ${error.message}`;
+                });
+        }
+        
+                     // Fetch data from TikTok Downloader musdown API
+        function fetchmus() {
+            const url = document.getElementById('MSdown-url').value;
+            const output = document.getElementById('MSdown-output');
+
+            if (!url) {
+                output.textContent = 'URL TikTok wajib diisi!';
+                return;
+            }
+
+            output.textContent = 'Loading...';
+            const apiUrl =`https://rullz-api.vercel.app/msdown/download?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent =`${apiUrl}\n\n ${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    output.textContent = `Error: ${error.message}`;
+                });
+        }
+        
+                     // Fetch data from apel musik downloader api
+        function fetchApel() {
+            const url = document.getElementById('Apel-url').value;
+            const output = document.getElementById('Apel-output');
 
             if (!url) {
                 output.textContent = 'URL TikTok wajib diisi!';
