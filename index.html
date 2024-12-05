@@ -51,7 +51,17 @@
             
             transition: box-shadow 0.3s;
         }
+       .api-sectionred {
+            border: 1px solid red;
+            border-radius: 0px;
+            margin: 10px 5px; /* Jarak atas dan bawah */
+            
+            transition: box-shadow 0.3s;
+        }
         .api-section:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        api-sectionred:hover {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .api-title {
@@ -145,6 +155,21 @@
        h4 {
        margin: 10px 10px;
        }
+      .berikut {
+        background-color:#525252;
+        border-radius:0px;
+        height:23px;
+        width: 55%;
+      
+      }
+      .flexx {
+        display: flex;
+      }
+      .hijau {
+        background-color:#9cff95;
+        border-radius:0px;
+        
+      }
     </style>
 </head>
 <body class="flex flex-col h-screen justify-between bg-gray-100">
@@ -176,13 +201,21 @@
         
         <!-- API Test UI -->
         <p class="font-serif">BERIKUT ADALAH REST API GRATIS</p>
-        <p class="font-light">bisa untuk bot WhatsApp</p>
+       <div class="flex">
+       <div class="berikut">
+        <p class="font-light"><font color="white">bisa untuk bot WhatsApp</p>
+       </font>
+       </div>
+    <div class="hijau"><font color="white>"<p class="response-time">Fetching...</p></font></div>
+       </div>
 <br>
 <p class="text-lg font-extrabold text-blue-600">INFORMASI:</p>
 
                          <div class="api-section">
                     <div class="api-title" onclick="toggleResponse('gempa-response')">
-          <div class="gett"><div class="kotakget"><font color="white">GET</font></div></div>
+          <div class="gett"><div class="kotakget"><font color="white">GET</font>
+          </div>
+          </div>
                            
 	<div class="teksnya">
                      <h4>1. BMKG Gempa 🔥</h4></div>
@@ -202,7 +235,7 @@
 <p class="text-lg font-extrabold text-blue-600">FITUR DOWNLOADER:</p>
 
                 <!-- Section YouTube Downloader API -->
-                <div class="api-section">
+                <div class="api-sectionred">
                     <div class="api-title" onclick="toggleResponse('youtube-response')">
                     <div class="error"><div class="kotakget"><font color="white">ERR</font></div></div>
                      <div class="teksnya">
@@ -346,8 +379,31 @@
         <a href="halaman2.html"><i class="fas fa-file-alt text-white text-xl cursor-pointer"></i></a>
         <a href="linknya.html"><i class="fas fa-link text-white text-xl cursor-pointer"></i></a>
     </div>
-    <audio id="audioPlayer" preload="auto" src="https://filezone-cdn.caliph.dev/file/2c747d43955e422a8c24.mp3"></audio>
+    <audio id="audioPlayer" preload="auto" src="https://filezone-cdn.caliph.dev/file/ae96f3bf06953cf04ee7.mp3"></audio>
     <script>
+        async function fetchPing() {
+      const responseTimeElement = document.querySelector('.response-time');
+      try {
+        const startTime = performance.now(); // Waktu mulai
+        const response = await fetch('https://rullz-api.vercel.app/ping'); // Fetch API
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`); // Cek status respons
+        const endTime = performance.now(); // Waktu selesai
+        const elapsedTime = (endTime - startTime).toFixed(2); // Hitung waktu respons
+        responseTimeElement.textContent = `${elapsedTime} ms`;
+        responseTimeElement.classList.remove('error'); // Hapus class error jika ada
+      } catch (error) {
+        responseTimeElement.textContent = 'Failed to fetch';
+        responseTimeElement.classList.add('error'); // Tambahkan class error
+        console.error('Error:', error.message);
+      }
+    }
+
+    // Panggil fungsi fetchPing setiap 1 detik
+    setInterval(fetchPing, 2000);
+
+    // Fetch pertama kali saat halaman dimuat
+    fetchPing();
+    
         const menuButton = document.getElementById('menuButton');
         const closeButton = document.getElementById('closeButton');
         const sidebar = document.getElementById('sidebar');
