@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Fetch API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fetch Data TikWM</h1>
+  <p>Hasil data dari API akan muncul di bawah:</p>
+  <div id="result" class="result">Memuat data...</div>
+
+  <script>
+    async function fetchData() {
+      try {
+        const response = await fetch('https://aabbcc.vercel.app/read-tikwm');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById('result').textContent = `Error: ${error.message}`;
+      }
+    }
+
+    // Panggil fungsi fetch setiap 1 detik
+    setInterval(fetchData, 1000);
+  </script>
+</body>
+</html>
