@@ -143,6 +143,11 @@ position: absolute;
   align-items: center; /* Teks di tengah vertikal */
   
  }
+ .jarakTextAuthor {
+ position: relative;
+     top: -4px;
+   margin-top:0;
+ }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900">
@@ -198,18 +203,23 @@ position: absolute;
             <div class="flex items-center mb-4 induknya">
                 <img id="author-avatar" alt="Author avatar" class="w-12 h-12 rounded-full mr-4"/>
                 <div>
-                    <h4 id="video-name" class="text-xl font-semibold"></h4>
-                    <p id="video-author" class="text-gray-600"></p>
+                <font size="3">
+                    <p id="video-name" class="font-semibold"></p>
+                    </font>
+                    <p id="video-author" class="text-gray-600 jarakTextAuthor"></p>
                 </div>
           <div class="hahaha">
       <font color="#7e7e7e" size="2px">
           <p id="tanggalnya"></p>
+          
       </font>
           </div>
             </div>
             <div class="video-container">
             <video id="video-player" controls></video>
     <div class="divideonya">
+        <font color="white">
+        <p id="negara"></p></font>
       <div class="huhu">
          <p id="desc-title"></p>
       </div>
@@ -251,8 +261,10 @@ position: absolute;
             <div class="flex items-center mb-4">
                 <i class="fas fa-music text-gray-600 text-2xl mr-4"></i>
                 <div>
-                    <p id="music-title" class="text-lg font-semibold"></p>
-                    <p id="music-author" class="text-gray-600"></p>
+                    <font size="3px">
+                    <p id="music-title" class="font-semibold"></p></font>
+            <font size="2px">
+                    <p id="music-author" class="text-gray-600 jarakTextAuthor"></p></font>
                 </div>
             </div>
             <audio id="music-player" class="w-full mb-4 custom-audio" style="background-color: #F2F3F5;" controls></audio>
@@ -350,7 +362,7 @@ position: absolute;
     const progressBarInner = document.getElementById('progress-bar-inner');
     const deskripsi = document.getElementById('desc-title');
     const kapandipost = document.getElementById('tanggalnya');
-    
+   const negaranya = document.getElementById('negara');
     menuButton.addEventListener('click', () => {
         sidebar.classList.toggle('menu-open');
         overlay.classList.toggle('hidden');
@@ -456,6 +468,7 @@ position: absolute;
                 musicPlayer.src = data.data.musicInfo.play;
                 deskripsi.textContent = data.data.title;
                 kapandipost.textContent = data.data.videoInfo.createTime;
+                negaranya.textContent = data.data.region;
                 const currentDate = new Date();
                 const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
                 const formattedTime = `${String(currentDate.getHours()).padStart(2, '0')}-${String(currentDate.getMinutes()).padStart(2, '0')}-${String(currentDate.getSeconds()).padStart(2, '0')}`;
