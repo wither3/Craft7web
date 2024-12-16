@@ -204,6 +204,14 @@
       padding: 10px;
       border-radius: 5px;
     }
+    .text2 {
+            position: absolute; /* Posisi absolut untuk menempatkan teks di atas */
+            top: 0; /* Menempel ke atas */
+            left: 0; /* Menempel ke kiri */
+            font-size: 24px;
+            color: red;
+            
+        }
     </style>
 </head>
 <body class="flex flex-col h-screen justify-between bg-gray-100">
@@ -461,11 +469,11 @@
         });
 
         // Fetch earthquake data from API
-        fetch('https://bmkg-gempa-api-rho.vercel.app/')
+        fetch('https://rullz-api.vercel.app/gempa')
             .then(response => response.json())
             .then(data => {
                 const newsContainer = document.getElementById('newsContainer');
-                const item = data[0]; // Only use the first item
+                const item = data; // Only use the first item
                 const newsItem = document.createElement('div');
                 newsItem.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-lg', 'mb-4');
                 newsItem.innerHTML = `
@@ -474,13 +482,16 @@
                         <img alt="Peta lokasi gempa dengan magnitude ${item.magnitude} dan kedalaman ${item.kedalaman}" class="map-image rounded-lg" src="${item.gambarUrl}" />
                         <div class="w-[calc(75%-20px)]">
                             <p class="text-gray-700 info-text"><strong>Waktu:</strong> ${item.waktu}</p>
+                     
                             <p class="text-gray-700 info-text"><strong>Magnitude:</strong> ${item.magnitude}</p>
                             <p class="text-gray-700 info-text"><strong>Kedalaman:</strong> ${item.kedalaman}</p>
-                            <p class="text-gray-700 info-text"><strong>Koordinat:</strong> ${item.koordinat}</p>
-                            <p class="text-gray-700 info-text"><strong>Lokasi:</strong> <a href="#" class="text-blue-500 text-sm" id="toggleText">Baca selengkapnya...</a></p>
-                            <div id="moreText" class="more-text">
+    <a href="#" class="text-blue-500 text-sm" id="toggleText">Baca selengkapnya...</a>                     
+<div id="moreText" class="more-text">                            <p class="text-gray-700 info-text"><strong>Koordinat:</strong>
+       ${item.koordinat}</p>
+                            <p class="text-gray-700 info-text"><strong>Lokasi:</strong>${item.lokasi}</p>
+                           
                                 <p class="text-gray-700 info-text">${item.lokasi}</p>
-                                <p class="text-gray-700 info-text"><strong>Dirasakan:</strong> ${item.dirasakan}</p>
+                                <p class="text-gray-700 info-text"><strong>Saran:</strong> ${item.saran}</p>
                             </div>
                         </div>
                     </div>
@@ -521,7 +532,7 @@
         function fetchGempa() {
             const output = document.getElementById('gempa-output');
             output.textContent = 'Loading...';
-            const bmkgApi ='https://bmkg-gempa-api-rho.vercel.app/';
+            const bmkgApi ='https://rullz-api.vercel.app/gempa';
             fetch(bmkgApi)
                 .then(response => response.json())
                 .then(data => {
