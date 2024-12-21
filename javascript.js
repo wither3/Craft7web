@@ -30,25 +30,28 @@ async function fetchTikTokProfile() {
   <div class="geserrr">
       <div class="kotakdata">
           <center>
+           
           <font color="#737373">following</font>
-          <p>${profile.stats.following}</p></center>
+         
+          <p class="text-1xl font-bold">${profile.stats.following}</p></center>
+          
           </div>
       <div class="kotakdata">
           <center>
    <font color="#737373">
    <p>followers</p></font>
-   <p>${profile.stats.totalFollowers}</p></center>
+   <p class="text-1xl font-bold">${profile.stats.totalFollowers}</p></center>
    </div>
    <div class="kotakdata">
        <center>
         <font color="737373"><p>Like</p></font>
-        <p>${profile.stats.totalLikes}</p></center>
+        <p class="text-1xl font-bold">${profile.stats.totalLikes}</p></center>
         </div>
         
         <div class="kotakdata">
             <center>
         <font color="737373"><p>Video</p></font>
-        <p>${profile.stats.totalVideos}</p></center>
+        <p class="text-1xl font-bold">${profile.stats.totalVideos}</p></center>
         </div>
         </div>
       `;
@@ -56,7 +59,7 @@ async function fetchTikTokProfile() {
       profileContainer.innerHTML = '<p>Failed to fetch data.</p>';
     }
   } catch (error) {
-    loadingText.innerText = 'Error fetching data.';
+    loadingText.innerText = 'Error fetching data🥹:<br>${error}';
     console.error('Error:', error);
   }
 }
@@ -111,35 +114,34 @@ async function fetchPing() {
         });
 
         // Fetch earthquake data from API
-        fetch('https://rullz-api.vercel.app/gempa')
+fetch('https://rullz-api.vercel.app/gempa')
             .then(response => response.json())
             .then(data => {
                 const newsContainer = document.getElementById('newsContainer');
-                const item = data; // Only use the first item
+                const item = data.Infogempa.gempa; // Gunakan objek yang sesuai
                 const newsItem = document.createElement('div');
                 newsItem.classList.add('untukGempa');
                 newsItem.innerHTML = `
-             <center><font size="4px" class="font-medium text-blue-600">Gempa Indonesia terkini</font></center>
+                    <center><font size="4px" class="font-medium text-blue-600">Gempa Indonesia Terkini</font></center>
                     <div class="flex">
-                        <img alt="gagal memunculkan peta" class="map-image rounded-lg" src="${item.gambarUrl}" />
+                        <img alt="Gagal memunculkan peta" class="map-image rounded-lg" src="https://static.bmkg.go.id/${item.Shakemap}" />
                         <div class="w-[calc(75%-20px)]">
-                            <p class="text-gray-700 info-text"><strong>Waktu:</strong> ${item.waktu}</p>
-                     
-                            <p class="text-gray-700 info-text"><strong>Magnitude:</strong> ${item.magnitude}</p>
-                            <p class="text-gray-700 info-text"><strong>Kedalaman:</strong> ${item.kedalaman}</p>
-    <a href="#" class="text-blue-500 text-sm" id="toggleText">Baca selengkapnya...</a>                     
-<div id="moreText" class="more-text">                            <p class="text-gray-700 info-text"><strong>Koordinat:</strong>
-       ${item.koordinat}</p>
-                            <p class="text-gray-700 info-text"><strong>Lokasi:</strong>${item.lokasi}</p>
-                           
-                                <p class="text-gray-700 info-text">${item.lokasi}</p>
-                                <p class="text-gray-700 info-text"><strong>Saran:</strong> ${item.saran}</p>
+                            <p class="text-gray-700 info-text"><strong>Waktu:</strong> ${item.Tanggal} ${item.Jam}</p>
+                            <p class="text-gray-700 info-text"><strong>Magnitude:</strong> ${item.Magnitude}</p>
+                            <p class="text-gray-700 info-text"><strong>Kedalaman:</strong> ${item.Kedalaman}</p>
+                            <a href="#" class="text-blue-500 text-sm" id="toggleText">Baca selengkapnya...</a>                     
+                            <div id="moreText" class="more-text">
+                                <p class="text-gray-700 info-text"><strong>Koordinat:</strong> ${item.Coordinates}</p>
+                                <p class="text-gray-700 info-text"><strong>Lokasi:</strong> ${item.Wilayah}</p>
+                                <p class="text-gray-700 info-text"><strong>Potensi:</strong> ${item.Potensi}</p>
+                                <p class="text-gray-700 info-text"><strong>Dirasakan:</strong> ${item.Dirasakan}</p>
                             </div>
                         </div>
                     </div>
-                    
                 `;
+
                 newsContainer.appendChild(newsItem);
+                
 
                 const toggleText = document.getElementById('toggleText');
                 const moreText = document.getElementById('moreText');
