@@ -1,0 +1,184 @@
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  background-color: #f0f0f0;
+}
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .link-box {
+            background-color: white;
+            border: 2px solid black;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            margin-top: 3px;
+           
+            width: 90%;
+        }
+        .link-box:hover {
+            background-color: white;
+        }
+           .box {
+      width: 300px;
+     align: center;
+      background-color: white;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 2px;
+      box-sizing: border-box;
+      
+      margin-top:70px;
+    }
+
+    .box h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #333;
+    }
+
+   .pe {
+       margin-left:15px;
+   } 
+   .btn {
+  background-color: #0ec700;
+  border: none;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius:5px;
+  display:flex;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: RoyalBlue;
+}
+  .btn2 {
+  background-color: #0003ffb9;
+  border: none;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius:5px;
+  display:flex;
+  margin-left:3px;
+}
+.btn2:hover {
+    background-color:#ff0a00c5;
+}
+ .bagianTombol {
+     display:flex;
+     margin-left:3px;
+ }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="flex flex-col h-screen justify-between">
+    <!-- Top Navigation Bar -->
+    <div class="bg-[#1A67A7] flex items-center justify-between p-2 fixed top-0 left-0 right-0 z-20">
+        <i id="menuButton" class="fas fa-bars text-white text-lg cursor-pointer"></i>
+        <h1 class="text-white text-base font-bold">SHOP</h1>
+        <i id="musicButton" class="fas fa-music text-white text-lg cursor-pointer"></i>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-[#1A67A7] p-4 z-30">
+        <div class="flex justify-between items-center">
+            <div class="text-white font-bold text-lg">Menu</div>
+            <i id="closeButton" class="fas fa-times text-white text-lg cursor-pointer"></i>
+        </div>
+        <ul class="text-white mt-4">
+            <li class="py-2"><a href="tiktokd.html">TikTok downloader</a></li>
+            <li class="py-2"><a href="index2.html">YouTube downloader</a></li>
+            <li class="py-2"><a href="index3.html">Instagram downloader</a></li>
+            <li class="py-2"><a href="spotify.html">Spotify downloader</a></li>
+            <li class="py-2"><a href="index4.html">applemusic downloader</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    
+   
+    <div class="box">
+     <img src="https://pm6jctnwwrulrr4g.public.blob.vercel-storage.com/20241225_165511-GCeTRKa25bjgyDmvgLeCffQTwVWxSx.jpg" alt="Gambar di Kotak">
+     <center>
+     <font color="black">
+  <p class="font-medium">Source Code TikDl tiktok downloader</p></font></center>
+      <p class="font-extrabold pe">IDR: 2000</p>
+   <div class="bagianTombol">
+      <a href="https://wa.me/628561739504?text=buy+source+code+TikDl+v1+idr+2000" class="btn">
+    <svg style="margin-right:5px; margin-top:3px;" fill="#ffffff" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 303.124 303.124" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M312.208,48.613c-1.136-1.47-2.889-2.33-4.746-2.33H70.499L59.631,4.49c-0.01-0.038-0.024-0.073-0.035-0.11 c-0.033-0.119-0.07-0.235-0.11-0.35c-0.026-0.076-0.054-0.152-0.083-0.227c-0.042-0.105-0.086-0.208-0.133-0.31 c-0.038-0.083-0.077-0.165-0.118-0.246c-0.045-0.087-0.093-0.172-0.143-0.257c-0.051-0.088-0.103-0.175-0.158-0.26 c-0.048-0.074-0.099-0.145-0.149-0.216c-0.063-0.088-0.127-0.175-0.194-0.259C58.456,2.19,58.4,2.127,58.344,2.063 c-0.07-0.081-0.141-0.161-0.216-0.238c-0.062-0.064-0.128-0.125-0.192-0.187c-0.073-0.068-0.145-0.136-0.221-0.201 c-0.076-0.065-0.155-0.126-0.234-0.187c-0.07-0.054-0.14-0.108-0.212-0.159c-0.09-0.064-0.183-0.123-0.277-0.181 c-0.067-0.042-0.134-0.085-0.203-0.123c-0.101-0.057-0.204-0.11-0.309-0.162c-0.068-0.034-0.136-0.068-0.205-0.099 c-0.104-0.046-0.21-0.088-0.317-0.129c-0.077-0.03-0.154-0.059-0.232-0.085c-0.099-0.033-0.2-0.063-0.301-0.091 c-0.093-0.025-0.185-0.05-0.279-0.071c-0.089-0.02-0.178-0.037-0.268-0.053c-0.111-0.02-0.224-0.038-0.337-0.052 c-0.077-0.009-0.154-0.016-0.231-0.022c-0.126-0.01-0.252-0.017-0.38-0.019C53.896,0.005,53.86,0,53.824,0H6C2.687,0,0,2.687,0,6 c0,3.313,2.687,6,6,6h43.185l10.867,41.793c0,0.001,0.001,0.002,0.001,0.004l36.107,138.852c0.688,2.644,3.075,4.49,5.807,4.49 h169.383c2.732,0,5.119-1.846,5.807-4.49l36.111-138.855C313.736,51.996,313.345,50.083,312.208,48.613z M290.786,92.566h-62.338 V58.283h71.254L290.786,92.566z M278.748,138.855h-50.3v-34.289h59.217L278.748,138.855z M156.87,138.855v-34.289h59.578v34.289 H156.87z M216.448,150.855v34.283H156.87v-34.283H216.448z M85.655,104.566h59.215v34.289H94.571L85.655,104.566z M156.87,92.566 V58.283h59.578v34.283H156.87z M144.87,58.283v34.283H82.534l-8.915-34.283H144.87z M97.692,150.855h47.178v34.283h-38.263 L97.692,150.855z M266.711,185.139h-38.263v-34.283h47.179L266.711,185.139z"></path> <path d="M126.419,211.072c-16.791,0-30.451,13.66-30.451,30.451s13.66,30.451,30.451,30.451s30.451-13.66,30.451-30.451 S143.21,211.072,126.419,211.072z M126.419,259.975c-10.174,0-18.451-8.277-18.451-18.451c0-10.174,8.277-18.451,18.451-18.451 s18.451,8.277,18.451,18.451C144.87,251.697,136.593,259.975,126.419,259.975z"></path> <path d="M246.9,211.072c-16.791,0-30.451,13.66-30.451,30.451s13.66,30.451,30.451,30.451c16.791,0,30.451-13.66,30.451-30.451 S263.69,211.072,246.9,211.072z M246.9,259.975c-10.174,0-18.451-8.277-18.451-18.451c0-10.174,8.277-18.451,18.451-18.451 c10.174,0,18.451,8.277,18.451,18.451C265.351,251.697,257.073,259.975,246.9,259.975z"></path> </g> </g></svg>
+      <p class="font-extrabold">Buy</p>
+          </a>
+        <a href="https://craft7web.vercel.app/tiktokd.html" class="btn2">
+       <p class="font-extrabold">view demo</p>
+        </a>
+        
+          </div>
+      
+    </div>
+
+
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bg-[#1A67A7] flex justify-around p-2 fixed bottom-0 left-0 right-0 z-10">
+        <a href="index.html"><i class="fas fa-home text-white text-xl cursor-pointer"></i></a>
+        <a href="halaman2.html"><i class="fas fa-file-alt text-white text-xl cursor-pointer"></i></a>
+        <a href="dijual.html">
+  <svg fill="yellow" width="27px" height="27px" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+    <g id="SVGRepo_iconCarrier">
+      <path d="M891 308H340q-6 0-10.5-4t-5.5-10l-32-164q-2-14-12-22.5T256 99H110q-15 0-25.5 10.5T74 135v5q0 15 10.5 26t25.5 11h102q4 0 7 2.5t4 6.5l102 544q3 19 20 28 8 5 18 5h17q-22 25-21 58.5t25 56.5 57.5 23 58-23 25.5-56.5-22-58.5h186q-23 25-21.5 58.5T693 878t57.5 23 57.5-23 25-56.5-21-58.5h17q15 0 25.5-10.5T865 727v-8q0-15-11-25.5T828 683H409q-6 0-10.5-4t-5.5-9l-10-54q-1-8 4-14t12-5h460q13 0 22.5-8t11.5-21l33-219q3-16-7.5-28.5T891 308z"></path>
+    </g>
+  </svg>
+</a>
+
+        <a href="link.html"><i class="fas fa-link text-white text-xl cursor-pointer"></i></a>
+    </div>
+
+    <audio id="audioPlayer" src="https://pm6jctnwwrulrr4g.public.blob.vercel-storage.com/ssstik.io_1734833244427-PQCKJAn9GRVJCJkaNWhoExJpQp492N.mp3" preload="auto"></audio>
+
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const closeButton = document.getElementById('closeButton');
+        const sidebar = document.getElementById('sidebar');
+        const musicButton = document.getElementById('musicButton');
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        closeButton.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+
+        musicButton.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            } else {
+                audioPlayer.pause();
+            }
+        });
+    </script>
+</body>
+</html>
