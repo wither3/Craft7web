@@ -248,7 +248,27 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Shadow lebih besar */
 }
 
-
+     .buttono {
+     
+            background-color: white; /* Latar belakang putih */
+            border: 1px solid black; /* Pinggir hitam */
+            color: black; /* Teks hitam */
+            padding: 5px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 8px;
+            cursor: pointer;
+            border-radius: 2px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Bayangan */
+            transition: background-color 0.5s, border-color 0.5s, color 0.5s; /* Transisi warna */
+        }
+        .buttono:active {
+            background-color: black; /* Latar belakang hitam saat ditekan */
+            border-color: red; /* Pinggir merah saat ditekan */
+            color: white; /* Teks putih saat ditekan */
+        }
+        
    .geserrr {
         display:flex;
         overflow-x:auto;
@@ -260,7 +280,55 @@
        
     }
 
+.gee {
+width:290px;
+    overflow-x:auto;
+}
 
+.scrollke {
+    width: 290px;
+    height: 260px; /* Tinggi tetap untuk memungkinkan scroll */
+    flex: 0 0 300px;
+    margin-right: 5px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow-y: auto; /* Aktifkan scroll vertikal */
+}
+
+.scrollke:hover {
+    transform: translateY(-5px); /* Kotak sedikit terangkat */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Shadow lebih besar */
+}
+
+.videonya {
+    background-color:black;
+    height:280px;
+    overflow-y:auto;
+}
+
+
+.kotakvideo {
+border:1px solid #8c8c8c;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Shadow lebih besar */
+    display:flex;
+    margin-bottom:15px;
+}
+
+.video {
+    margin-bottom: 15px;
+}
+.errrmr {
+    
+    width:120px;
+}
+
+.aaaak {
+    overflow-y:auto;
+    height:120px;
+}
     </style>
 </head>
 <body class="flex flex-col h-screen justify-between bg-gray-100">
@@ -282,6 +350,8 @@
             <li class="py-2"><a href="index3.html">Instagram downloader</a></li>
             <li class="py-2"><a href="spotify.html">Spotify downloader</a></li>
             <li class="py-2"><a href="index4.html">Apple Music downloader</a></li>
+            <li class"py-2">
+               <button id="changeUserBtn">Ganti Username</button></li>
         </ul>
     </div>
     <!-- Main Content -->
@@ -305,10 +375,16 @@
     <div class="untukGempa">
   <div id="profile-container">
       <p id="loading">Loading...</p>
+      
   </div>
         
     
                
+      </div>
+      <div class="scrollke">
+  <center><p class="font-medium">Video Terbaru</p></center>
+        <div id="videoList">Memuat data...</div>    
+        
       </div>
         </div>
         
@@ -510,6 +586,6 @@
   
   
     <script src="./javascript.js"></script>
-        
+    <script src="./uservideo.js"></script> 
 </body>
 </html>

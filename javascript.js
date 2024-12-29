@@ -1,71 +1,171 @@
-async function fetchTikTokProfile() {
-  const url = 'https://rullz-api.vercel.app/tikstalk?username=qhairulpratama';
+    // Fungsi untuk mengambil data dari API
+    async function fetchTikTokData() {
+      const url = 'https://tiktok-api15.p.rapidapi.com/index/Tiktok/getUserVideos?unique_id=%40qhairulpratama&count=0&cursor=0';
+      const options = {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': '44114406bbmshdee24010b885bc0p140418jsn3d9caf51b4b3',
+          'x-rapidapi-host': 'tiktok-api15.p.rapidapi.com',
+        },
+      };
+
+      try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+
+        // Jika data berhasil diambil
+        if (result.code === 0) {
+          displayVideos(result.data.videos);
+        } else {
+          document.getElementById('videoList').innerText = 'Gagal memuat data.';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('videoList').innerText = 'Terjadi kesalahan saat mengambil data.';
+      }
+    }
+
+    // Fungsi untuk menampilkan video
+    function displayVideos(videos) {
+      const videoList = document.getElementById('videoList');
+      videoList.innerHTML = '';
+
+      videos.forEach((video) => {
+        const videoElement = document.createElement('div');
+        
+   const timestamp = video.create_time; // Unix timestamp dalam detik
+const date = new Date(timestamp * 1000); // Konversi ke milidetik
+
+const day = date.getDate();
+const month = date.toLocaleString('en-US', { month: 'short' }); // Bulan disingkat otomatis
+const year = date.getFullYear();
+const time = date.toTimeString().split(' ')[0]; // Format jam:menit:detik
+
+const formattedDate = `${day} ${month} ${year} ${time}`;
+
+console.log(formattedDate); // Contoh output: "28 Dec 2024 20:38:02"
+
+     
+        
+        videoElement.className = 'video';
+        videoElement.innerHTML = `
+      <div class="kotakvideo">
+          <div class="videonya">
+         <video width="150px" height="980px" controls>
+        <source src="${video.play}" type="video/mp4">
+        Browser Anda tidak mendukung tag video.
+    </video></div>
+    <div class="errrmr">
+    <font size="1">
+    <font color="#5e5e5e">
+        <p>${formattedDate}</p>
+    </font></font>
+    <div class="aaaak">
+        <font size="2">
+    <p>${video.title}</p></font></div>
+    <center>
+    <a href="${video.play}" download="namanya.mp4" class="buttono">Download video</a>
+    </center>
+    </div>
+    
+      </div>
+        `;
+        videoList.appendChild(videoElement);
+      });
+    }
+
+    // Panggil fungsi fetch saat halaman dibuka
+    window.onload = fetchTikTokData;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    async function fetchTikTokProfile() {
+  const url = 'https://api.tiklydown.eu.org/api/stalk?user=qhairulpratama';
   const profileContainer = document.getElementById('profile-container');
   const loadingText = document.getElementById('loading');
 
   try {
     const response = await fetch(url);
-    const data = await response.json();
+    const result = await response.json();
 
     // Hapus teks loading
     loadingText.remove();
 
-    if (data.success) {
-      const profile = data.data;
+    if (result.status === 200) {
+      const user = result.data.user;
+      const stats = result.data.stats;
 
       // Pisahkan teks nickname sebelum tanda "—"
       const separator = '—';
-      const nickname = profile.nickname.includes(separator)
-        ? profile.nickname.split(separator)[0].trim()
-        : profile.nickname;
+      const nickname = user.nickname.includes(separator)
+        ? user.nickname.split(separator)[0].trim()
+        : user.nickname;
 
       // Tambahkan data ke halaman
       profileContainer.innerHTML = `
-      <center>
-        <img src="${profile.profilePicture}" alt="${profile.username}" class="rounded-full w-20 h-20"></center>
-        <center><h2>${nickname}</h2>
-        <font color="#626262">
-        <p><a href="${profile.profileUrl}" target="_blank">@${profile.username}</a></p></center></font>
-  
-  <div class="geserrr">
-      <div class="kotakdata">
-          <center>
-           
-          <font color="#737373">following</font>
-         
-          <p class="text-1xl font-bold">${profile.stats.following}</p></center>
-          
-          </div>
-      <div class="kotakdata">
-          <center>
-   <font color="#737373">
-   <p>followers</p></font>
-   <p class="text-1xl font-bold">${profile.stats.totalFollowers}</p></center>
-   </div>
-   <div class="kotakdata">
-       <center>
-        <font color="737373"><p>Like</p></font>
-        <p class="text-1xl font-bold">${profile.stats.totalLikes}</p></center>
-        </div>
-        
-        <div class="kotakdata">
+        <center>
+          <img src="${user.avatarLarger}" alt="${user.uniqueId}" class="rounded-full w-20 h-20">
+        </center>
+        <center>
+          <h2>${nickname}</h2>
+          <font color="#626262">
+          <p><a href="https://www.tiktok.com/@${user.uniqueId}" target="_blank">@${user.uniqueId}</a></p>
+          </font>
+        </center>
+        <div class="geserrr">
+          <div class="kotakdata">
             <center>
-        <font color="737373"><p>Video</p></font>
-        <p class="text-1xl font-bold">${profile.stats.totalVideos}</p></center>
-        </div>
+                <font size="2">
+              <font color="#737373">Following</font></font>
+              <p class="text-1xl font-bold">${stats.followingCount}</p>
+            </center>
+          </div>
+          <div class="kotakdata">
+            <center>
+                <font size="2">
+              <font color="#737373">Followers</font></font>
+              <p class="text-1xl font-bold">${stats.followerCount}</p>
+            </center>
+          </div>
+          <div class="kotakdata">
+            <center>
+                <font size="2">
+              <font color="#737373">Likes</font></font>
+              <p class="text-1xl font-bold">${stats.heartCount}</p>
+            </center>
+          </div>
+          <div class="kotakdata">
+            <center>
+                <font size="2">
+              <font color="#737373">Videos</font></font>
+              <p class="text-1xl font-bold">${stats.videoCount}</p>
+            </center>
+          </div>
         </div>
       `;
     } else {
       profileContainer.innerHTML = '<p>Failed to fetch data.</p>';
     }
   } catch (error) {
-    loadingText.innerText = 'Error fetching data🥹:<br>${error}';
+    loadingText.innerHTML = `Error fetching data 🥹:<br>${error.message}`;
     console.error('Error:', error);
   }
 }
 
 // Jalankan fetch data saat halaman dibuka
 window.onload = fetchTikTokProfile;
+
+
+
+
+
+
 
 
 async function fetchPing() {
