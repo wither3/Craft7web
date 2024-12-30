@@ -78,11 +78,11 @@
             showLoading(videoList, 'Loading videos...');
 
             try {
-                const url = `https://tiktok-api15.p.rapidapi.com/index/Tiktok/getUserVideos?unique_id=${username}&count=35&cursor=0`;
+                const url = `https://tiktok-api15.p.rapidapi.com/index/Tiktok/getUserVideos?unique_id=${username}&count=2&cursor=0`;
                 const options = {
                     method: 'GET',
                     headers: {
-                        'x-rapidapi-key': '44114406bbmshdee24010b885bc0p140418jsn3d9caf51b4b3',
+                        'x-rapidapi-key': '2d8efbca6cmshba7782a3d1b31bcp160901jsn1b8edec486b4',
                         'x-rapidapi-host': 'tiktok-api15.p.rapidapi.com',
                     },
                 };
