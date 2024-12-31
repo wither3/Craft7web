@@ -418,6 +418,9 @@ fetch('https://rullz-api.vercel.app/gempa')
                 });
         }
         
+        
+        
+        
                      // Fetch data from apel musik downloader api
         function fetchApel() {
             const url = document.getElementById('Apel-url').value;
@@ -439,6 +442,53 @@ fetch('https://rullz-api.vercel.app/gempa')
                     output.textContent = `Error: ${error.message}`;
                 });
         }
+   
+ //lovetik tiktok downloader 
+ function fetchlovetik() {
+            const url = document.getElementById('lovetik-url').value;
+            const output = document.getElementById('lovetik-output');
+
+            if (!url) {
+                output.textContent = 'URL TikTok wajib diisi!';
+                return;
+            }
+
+            output.textContent = 'Loading...';
+            const apiUrl =`https://tik-downloaders.vercel.app/lovetik?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent =`${apiUrl}\n\n ${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    output.textContent = `Error: ${error.message}`;
+                });
+        }
+        
+        
+        
+ function fetchttsave() {
+            const url = document.getElementById('ttsave-url').value;
+            const output = document.getElementById('ttsave-output');
+
+            if (!url) {
+                output.textContent = 'URL TikTok wajib diisi!';
+                return;
+            }
+
+            output.textContent = 'Loading...';
+            const apiUrl =`https://tik-downloaders.vercel.app/ttsave?url=${encodeURIComponent(url)}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    output.textContent =`${apiUrl}\n\n ${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(error => {
+                    output.textContent = `Error: ${error.message}`;
+                });
+        }
+                
+   
    
     async function fetchWeather() {
       try {
